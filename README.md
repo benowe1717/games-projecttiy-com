@@ -4,7 +4,7 @@
 
 ## Contributing to Hardcore New World Tracker
 
-To contribute to Qualys NLTK, follow these steps:
+To contribute to Hardcore New World Tracker, follow these steps:
 
 1. Fork this repository
 2. Create a branch: `git checkout -b <branch_name>`
