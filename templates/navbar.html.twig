@@ -1,0 +1,37 @@
+{% block navbar %}
+{% set route = app.request.get('_route') %}
+
+<nav class="navbar navbar-expand-md bg-secondary-subtle py-3" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <span>Project TIY Games</span>
+        </a>
+        <button data-bs-toggle="collapse" class="navbar-toggler" data-bs-target="#navcol-1">
+            <span class="visually-hidden">Toggle navigation</span>
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navcol-1">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'app_home' ? 'active' }}" href="/">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="dropdown-toggle nav-link {{ route == 'app_players' ? 'active' }} {{ route == 'app_player' ? 'active' }} {{ route == 'app_player_previous' ? 'active' }}" aria-expanded="false" data-bs-toggle="dropdown" href="/players">Players</a>
+                    <div class="dropdown-menu">
+                        {% for player in players %}
+                            <a class="dropdown-item {{ player.id == active_player ? 'active' }}" href="/players/{{ player.id }}">{{ player.name }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'app_about' ? 'active' }}" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'app_contact' ? 'active' }}" href="/contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+{% endblock %}
