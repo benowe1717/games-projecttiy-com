@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+    {% block navbar %}
+        {{ include('navbar.html.twig') }}
+    {% endblock %}
+
+    {% block main %}
+        {{ include('contact/main.html.twig') }}
+    {% endblock %}
+
+    {% block footer %}
+        {{ include('footer.html.twig') }}
+    {% endblock %}
+{% endblock %}
