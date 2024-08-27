@@ -31,4 +31,5 @@ composer.lock
 ###> local files ###
 /.docker-env
 /.docker-run
+/data
 ###< local files ###

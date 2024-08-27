@@ -20,6 +20,9 @@ class Player
     #[ORM\Column(type: Types::TEXT)]
     private ?string $bio = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $profile = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +55,18 @@ class Player
     public function setBio(string $bio): static
     {
         $this->bio = $bio;
+
+        return $this;
+    }
+
+    public function getProfile(): ?string
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(?string $profile): static
+    {
+        $this->profile = $profile;
 
         return $this;
     }
