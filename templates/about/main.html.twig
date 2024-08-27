@@ -1,60 +1,48 @@
 {% block main %}
 
-<div class="container-fluid mt-3">
-    <div class="row">
-        <div class="col">
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-10">
             <h1>Rules</h1>
         </div>
     </div>
 </div>
-<div class="container-fluid mt-3">
-    <div class="row">
-        <div class="col">
-            <h2>What is allowed?</h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-10">
+            <h1>What is allowed?</h1>
             <ul class="list-group">
                 {% for rule in allowed_rules %}
                     <li class="list-group-item">
-                        <span>{{ rule.name }}</span>
+                        <span>- {{ rule.name }}</span>
                     </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 </div>
-<div class="container-fluid mt-3">
-    <div class="row">
-        <div class="col">
-            <h2>What is not allowed?</h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-10">
+            <h1>What is NOT allowed?</h1>
             <ul class="list-group">
                 {% for rule in not_allowed_rules %}
                     <li class="list-group-item">
-                        <span>{{ rule.name }}</span>
+                        <span>- {{ rule.name }}</span>
                     </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
 </div>
-<div class="container-fluid mt-3">
-    <div class="row">
-        <div class="col">
-            <h2>But What If?</h2>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-10">
+            <h1>But What If?</h1>
             <ul class="list-group">
                 {% for whatif in but_what_if%}
                     <li class="list-group-item">
-                        <span>{{ whatif.name }}</span>
+                        <span>- {{ whatif.name }}</span>
                     </li>
                 {% endfor %}
             </ul>

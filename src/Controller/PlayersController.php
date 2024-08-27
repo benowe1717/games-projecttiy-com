@@ -13,13 +13,16 @@ class PlayersController extends AbstractController
     private int $active_player = -1;
     private array $previous_attempts = array();
 
+    public function __construct()
+    {
+        $this->players[] = array('id' => 1, 'name' => 'specter2426', 'bio' => 'A cool short description of your character.', 'attempt_number' => 1, 'character_name' => 'ApakefHC', 'play_time' => 6, 'adventure_level' => 25);
+        $this->players[] = array('id' => 2, 'name' => 'plantmafia', 'bio' => 'A cool short description of your character.', 'attempt_number' => 1, 'character_name' => 'Barrett Jr', 'play_time' => 50, 'adventure_level' => 25);
+        $this->players[] = array('id' => 3, 'name' => 'BearsFruit', 'bio' => 'A cool short description of your character.', 'attempt_number' => 1, 'character_name' => 'Mr Silverado', 'play_time' => 2, 'adventure_level' => 10);
+    }
+
     #[Route('/players', name: 'app_players')]
     public function index(): Response
     {
-        $this->players[] = array('id' => 1, 'name' => 'specter2426');
-        $this->players[] = array('id' => 2, 'name' => 'plantmafia');
-        $this->players[] = array('id' => 3, 'name' => 'BearsFruit');
-
         return $this->render(
             'players/index.html.twig',
             [
@@ -33,9 +36,12 @@ class PlayersController extends AbstractController
     #[Route('/players/{id}', name: 'app_player')]
     public function playerIndex(string $id): Response
     {
-        $this->players[] = array('id' => 1, 'name' => 'specter2426');
-        $this->players[] = array('id' => 2, 'name' => 'plantmafia');
-        $this->players[] = array('id' => 3, 'name' => 'BearsFruit');
+        $currentPlayer = array();
+        foreach ($this->players as $player) {
+            if ($player['id'] == $id) {
+                $currentPlayer = $player;
+            }
+        }
 
         $player_id = $id;
         $this->previous_attempts[] = array('id' => 1, 'number' => 1);
@@ -47,7 +53,8 @@ class PlayersController extends AbstractController
                 'players' => $this->players,
                 'previous_attempts' => $this->previous_attempts,
                 'active_player' => $id,
-                'player_id' => $id
+                'player_id' => $id,
+                'player' => $currentPlayer
             ]
         );
     }
@@ -55,9 +62,12 @@ class PlayersController extends AbstractController
     #[Route('/players/{id}/previous/{num}', name: 'app_player_previous')]
     public function previousIndex(string $id, string $num): Response
     {
-        $this->players[] = array('id' => 1, 'name' => 'specter2426');
-        $this->players[] = array('id' => 2, 'name' => 'plantmafia');
-        $this->players[] = array('id' => 3, 'name' => 'BearsFruit');
+        $currentPlayer = array();
+        foreach ($this->players as $player) {
+            if ($player['id'] == $id) {
+                $currentPlayer = $player;
+            }
+        }
 
         $player_id = $id;
         $this->previous_attempts[] = array('id' => 1, 'number' => 1);
@@ -69,7 +79,8 @@ class PlayersController extends AbstractController
                 'players' => $this->players,
                 'previous_attempts' => $this->previous_attempts,
                 'active_player' => $id,
-                'player_id' => $id
+                'player_id' => $id,
+                'player' => $currentPlayer
             ]
         );
     }
