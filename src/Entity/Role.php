@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\MilestoneRepository;
+use App\Repository\RoleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: MilestoneRepository::class)]
-class Milestone
+#[ORM\Entity(repositoryClass: RoleRepository::class)]
+class Role
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -23,14 +23,14 @@ class Milestone
     private ?string $description = null;
 
     /**
-     * @var Collection<int, Attempt>
+     * @var Collection<int, Character>
      */
-    #[ORM\ManyToMany(targetEntity: Attempt::class, mappedBy: 'milestones')]
-    private Collection $attempts;
+    #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'role')]
+    private Collection $characters;
 
     public function __construct()
     {
-        $this->attempts = new ArrayCollection();
+        $this->characters = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,27 +70,30 @@ class Milestone
     }
 
     /**
-     * @return Collection<int, Attempt>
+     * @return Collection<int, Character>
      */
-    public function getAttempts(): Collection
+    public function getCharacters(): Collection
     {
-        return $this->attempts;
+        return $this->characters;
     }
 
-    public function addAttempt(Attempt $attempt): static
+    public function addCharacter(Character $character): static
     {
-        if (!$this->attempts->contains($attempt)) {
-            $this->attempts->add($attempt);
-            $attempt->addMilestone($this);
+        if (!$this->characters->contains($character)) {
+            $this->characters->add($character);
+            $character->setRole($this);
         }
 
         return $this;
     }
 
-    public function removeAttempt(Attempt $attempt): static
+    public function removeCharacter(Character $character): static
     {
-        if ($this->attempts->removeElement($attempt)) {
-            $attempt->removeMilestone($this);
+        if ($this->characters->removeElement($character)) {
+            // set the owning side to null (unless already changed)
+            if ($character->getRole() === $this) {
+                $character->setRole(null);
+            }
         }
 
         return $this;
