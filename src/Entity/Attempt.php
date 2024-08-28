@@ -28,6 +28,10 @@ class Attempt
     #[ORM\Column]
     private ?int $adventureLevel = null;
 
+    #[ORM\ManyToOne(inversedBy: 'attempts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Character $characterId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -96,6 +100,18 @@ class Attempt
     public function setAdventureLevel(int $adventureLevel): static
     {
         $this->adventureLevel = $adventureLevel;
+
+        return $this;
+    }
+
+    public function getCharacterId(): ?Character
+    {
+        return $this->characterId;
+    }
+
+    public function setCharacterId(?Character $characterId): static
+    {
+        $this->characterId = $characterId;
 
         return $this;
     }

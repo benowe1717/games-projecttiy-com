@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CharacterRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,6 +29,21 @@ class Character
     #[ORM\ManyToOne(inversedBy: 'characters')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Player $player = null;
+
+    /**
+     * @var Collection<int, Attempt>
+     */
+    #[ORM\OneToMany(targetEntity: Attempt::class, mappedBy: 'characterId')]
+    private Collection $attempts;
+
+    #[ORM\ManyToOne(inversedBy: 'characters')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Role $role = null;
+
+    public function __construct()
+    {
+        $this->attempts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -84,6 +101,48 @@ class Character
     public function setPlayer(?Player $player): static
     {
         $this->player = $player;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Attempt>
+     */
+    public function getAttempts(): Collection
+    {
+        return $this->attempts;
+    }
+
+    public function addAttempt(Attempt $attempt): static
+    {
+        if (!$this->attempts->contains($attempt)) {
+            $this->attempts->add($attempt);
+            $attempt->setCharacterId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttempt(Attempt $attempt): static
+    {
+        if ($this->attempts->removeElement($attempt)) {
+            // set the owning side to null (unless already changed)
+            if ($attempt->getCharacterId() === $this) {
+                $attempt->setCharacterId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): static
+    {
+        $this->role = $role;
 
         return $this;
     }
