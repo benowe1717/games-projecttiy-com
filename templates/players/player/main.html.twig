@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <h1>{{ player.name }}</h1>
-            <p>Attempt Number: {{ player.attempt_number }}</p>
+            <p>Attempt Number: {{ player.attemptNumber }}</p>
         </div>
     </div>
 </div>
@@ -16,7 +16,7 @@
                     <rect width="100%" height="100%" fill="#868e96"></rect>
                 </svg>
                 <div class="card-body">
-                    <h4 class="card-title">{{ player.character_name }}</h4>
+                    <h4 class="card-title">{{ player.characterName }}</h4>
                     <p class="card-text">{{ player.bio }}</p>
                 </div>
             </div>
@@ -47,10 +47,10 @@
                     </svg>
                 </div>
                 <div class="px-3">
-                    {% if player.play_time >= 24 %}
-                        <h4 class="fw-bold mb-0">{{ (player.play_time / 24)|format_number({fraction_digit: 2}) }} days</h4>
+                    {% if player.playTime >= 24 %}
+                        <h4 class="fw-bold mb-0">{{ (player.playTime / 24)|format_number({fraction_digit: 2}) }} days</h4>
                     {% else %}
-                        <h4 class="fw-bold mb-0">{{ player.play_time }} hours</h4>
+                        <h4 class="fw-bold mb-0">{{ player.playTime }} hours</h4>
                     {% endif%}
                     <p class="mb-0">Play Time</p>
                 </div>
@@ -62,11 +62,11 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <h1>Previous Attempts</h1>
-            {% if previous_attempts|length > 0 %}
+            {% if player.attemptNumber > 1 %}
                 <ul class="list-group">
                     {% for attempt in previous_attempts %}
                         <li class="list-group-item">
-                            <a class="list-group-link" href="/players/{{ player_id }}/previous/{{ attempt.id }}">Previous Attempt #{{ attempt.number }}</a>
+                            <a class="list-group-link" href="/players/{{ player.id }}/previous/{{ previous_attempt.id }}">Previous Attempt #{{ previous_attempt.number }}</a>
                         </li>
                     {% endfor %}
                 </ul>
