@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\AttemptRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AttemptRepository::class)]
@@ -31,6 +33,17 @@ class Attempt
     #[ORM\ManyToOne(inversedBy: 'attempts')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Character $characterId = null;
+
+    /**
+     * @var Collection<int, Milestone>
+     */
+    #[ORM\ManyToMany(targetEntity: Milestone::class, inversedBy: 'attempts')]
+    private Collection $milestones;
+
+    public function __construct()
+    {
+        $this->milestones = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -112,6 +125,30 @@ class Attempt
     public function setCharacterId(?Character $characterId): static
     {
         $this->characterId = $characterId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Milestone>
+     */
+    public function getMilestones(): Collection
+    {
+        return $this->milestones;
+    }
+
+    public function addMilestone(Milestone $milestone): static
+    {
+        if (!$this->milestones->contains($milestone)) {
+            $this->milestones->add($milestone);
+        }
+
+        return $this;
+    }
+
+    public function removeMilestone(Milestone $milestone): static
+    {
+        $this->milestones->removeElement($milestone);
 
         return $this;
     }

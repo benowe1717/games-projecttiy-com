@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\MilestoneRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -19,6 +21,17 @@ class Milestone
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
+
+    /**
+     * @var Collection<int, Attempt>
+     */
+    #[ORM\ManyToMany(targetEntity: Attempt::class, mappedBy: 'milestones')]
+    private Collection $attempts;
+
+    public function __construct()
+    {
+        $this->attempts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -52,6 +65,33 @@ class Milestone
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Attempt>
+     */
+    public function getAttempts(): Collection
+    {
+        return $this->attempts;
+    }
+
+    public function addAttempt(Attempt $attempt): static
+    {
+        if (!$this->attempts->contains($attempt)) {
+            $this->attempts->add($attempt);
+            $attempt->addMilestone($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAttempt(Attempt $attempt): static
+    {
+        if ($this->attempts->removeElement($attempt)) {
+            $attempt->removeMilestone($this);
+        }
 
         return $this;
     }
