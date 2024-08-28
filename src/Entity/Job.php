@@ -20,6 +20,9 @@ class Job
     #[ORM\Column(type: Types::TEXT)]
     private ?string $description = null;
 
+    #[ORM\OneToOne(mappedBy: 'primaryJob', cascade: ['persist', 'remove'])]
+    private ?Character $characterId = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +55,23 @@ class Job
     public function setDescription(string $description): static
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    public function getCharacterId(): ?Character
+    {
+        return $this->characterId;
+    }
+
+    public function setCharacterId(Character $characterId): static
+    {
+        // set the owning side of the relation if necessary
+        if ($characterId->getPrimaryJob() !== $this) {
+            $characterId->setPrimaryJob($this);
+        }
+
+        $this->characterId = $characterId;
 
         return $this;
     }

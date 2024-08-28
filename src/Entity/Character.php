@@ -40,6 +40,12 @@ class Character
     #[ORM\JoinColumn(nullable: false)]
     private ?Role $role = null;
 
+    #[ORM\OneToOne(inversedBy: 'characterId', cascade: ['persist', 'remove'])]
+    private ?Job $primaryJob = null;
+
+    #[ORM\OneToOne(inversedBy: 'characterId', cascade: ['persist', 'remove'])]
+    private ?Job $secondaryJob = null;
+
     public function __construct()
     {
         $this->attempts = new ArrayCollection();
@@ -143,6 +149,30 @@ class Character
     public function setRole(?Role $role): static
     {
         $this->role = $role;
+
+        return $this;
+    }
+
+    public function getPrimaryJob(): ?Job
+    {
+        return $this->primaryJob;
+    }
+
+    public function setPrimaryJob(Job $primaryJob): static
+    {
+        $this->primaryJob = $primaryJob;
+
+        return $this;
+    }
+
+    public function getSecondaryJob(): ?Job
+    {
+        return $this->secondaryJob;
+    }
+
+    public function setSecondaryJob(?Job $secondaryJob): static
+    {
+        $this->secondaryJob = $secondaryJob;
 
         return $this;
     }
