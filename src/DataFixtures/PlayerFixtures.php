@@ -60,11 +60,17 @@ class PlayerFixtures extends Fixture
                 $name = $data[0];
                 $bio = $data[1];
                 $profile = $data[2];
+                $attemptNumber = $data[3];
+                $characterName = $data[4];
+                $playTime = $data[5];
 
                 $player = new Player();
                 $player->setName($name);
                 $player->setBio($bio);
                 $player->setProfile($profile);
+                $player->setAttemptNumber($attemptNumber);
+                $player->setCharacterName($characterName);
+                $player->setPlayTime($playTime);
 
                 $manager->persist($player);
                 $manager->flush();

@@ -23,6 +23,15 @@ class Player
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $profile = null;
 
+    #[ORM\Column]
+    private ?int $attemptNumber = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $characterName = null;
+
+    #[ORM\Column]
+    private ?int $playTime = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -67,6 +76,42 @@ class Player
     public function setProfile(?string $profile): static
     {
         $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function getAttemptNumber(): ?int
+    {
+        return $this->attemptNumber;
+    }
+
+    public function setAttemptNumber(int $attemptNumber): static
+    {
+        $this->attemptNumber = $attemptNumber;
+
+        return $this;
+    }
+
+    public function getCharacterName(): ?string
+    {
+        return $this->characterName;
+    }
+
+    public function setCharacterName(string $characterName): static
+    {
+        $this->characterName = $characterName;
+
+        return $this;
+    }
+
+    public function getPlayTime(): ?int
+    {
+        return $this->playTime;
+    }
+
+    public function setPlayTime(int $playTime): static
+    {
+        $this->playTime = $playTime;
 
         return $this;
     }
