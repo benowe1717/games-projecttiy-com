@@ -18,6 +18,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Player;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
@@ -31,7 +32,7 @@ use Doctrine\Persistence\ObjectManager;
  * @version   Release: 0.0.1
  * @link      https://github.com/benowe1717/games-projecttiy-com
  **/
-class PlayerFixtures extends Fixture
+class PlayerFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
      * Load data into database
@@ -46,6 +47,8 @@ class PlayerFixtures extends Fixture
         // $manager->persist($product);
 
         // $manager->flush();
+
+        $playerMilestones = $this->getPlayerMilestones();
 
         $file = './data/players.csv';
 
@@ -71,6 +74,13 @@ class PlayerFixtures extends Fixture
                 $player->setAttemptNumber($attemptNumber);
                 $player->setCharacterName($characterName);
                 $player->setPlayTime($playTime);
+                if (!empty($playerMilestones[$name])) {
+                    foreach ($playerMilestones[$name] as $milestone) {
+                        $ref = "milestone.{$milestone}";
+                        $milestoneRef = $this->getReference($ref);
+                        $player->addMilestone($milestoneRef);
+                    }
+                }
 
                 $manager->persist($player);
                 $manager->flush();
@@ -81,5 +91,51 @@ class PlayerFixtures extends Fixture
                 $row++;
             }
         }
+    }
+
+    /**
+     * Get dependent DataFixtures
+     *
+     * @return array
+     **/
+    public function getDependencies(): array
+    {
+        return [
+            MilestoneFixtures::class,
+        ];
+    }
+
+    /**
+     * Pull in all milestones associated for each created player
+     *
+     * @return array
+     **/
+    public function getPlayerMilestones(): array
+    {
+        $playerMilestones = array();
+
+        $file = './data/player_milestones.csv';
+
+        $row = 1;
+        if (($handle = fopen($file, 'r')) !== false) {
+            while (($data = fgetcsv($handle, 1000, ',')) !== false) {
+                if ($row === 1) {
+                    $row++;
+                    continue;
+                }
+
+                $playerName = $data[0];
+                $milestoneName = $data[1];
+
+                if (!array_key_exists($playerName, $playerMilestones)) {
+                    $playerMilestones[$playerName] = array();
+                }
+                array_push($playerMilestones[$playerName], $milestoneName);
+
+                $row++;
+            }
+        }
+
+        return $playerMilestones;
     }
 }

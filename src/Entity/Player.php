@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\PlayerRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,17 @@ class Player
 
     #[ORM\Column]
     private ?int $playTime = null;
+
+    /**
+     * @var Collection<int, Milestone>
+     */
+    #[ORM\ManyToMany(targetEntity: Milestone::class, inversedBy: 'players')]
+    private Collection $milestones;
+
+    public function __construct()
+    {
+        $this->milestones = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -112,6 +125,30 @@ class Player
     public function setPlayTime(int $playTime): static
     {
         $this->playTime = $playTime;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Milestone>
+     */
+    public function getMilestones(): Collection
+    {
+        return $this->milestones;
+    }
+
+    public function addMilestone(Milestone $milestone): static
+    {
+        if (!$this->milestones->contains($milestone)) {
+            $this->milestones->add($milestone);
+        }
+
+        return $this;
+    }
+
+    public function removeMilestone(Milestone $milestone): static
+    {
+        $this->milestones->removeElement($milestone);
 
         return $this;
     }
