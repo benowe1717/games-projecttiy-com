@@ -4,77 +4,31 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <h1>{{ player.name }}</h1>
-            <p>Attempt Number: {{ player.attemptNumber }}</p>
         </div>
     </div>
 </div>
+
 <div class="container mt-3 mb-3">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-10">
-            <div class="card">
-                <svg class="bd-placeholder-img card-img-top" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" role="img">
-                    <rect width="100%" height="100%" fill="#868e96"></rect>
-                </svg>
-                <div class="card-body">
-                    <h4 class="card-title">{{ player.characterName }}</h4>
-                    <p class="card-text">{{ player.bio }}</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container mt-3 mb-3">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-10">
-            <h1>Milestones Achieved</h1>
-            <p>miletone1, milestone2, milestone3, etc</p>
-        </div>
-    </div>
-</div>
-<div class="container mt-3 mb-3">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-10">
-            <h1>Player Details</h1>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-md-3">
-            <div class="text-center d-flex flex-column justify-content-center align-items-center py-3">
-                <div class="bs-icon-md bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-2 bs-icon lg">
-                    <svg class="bi bi-smartwatch" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M9 5a.5.5 0 0 0-1 0v3H6a.5.5 0 0 0 0 1h2.5a.5.5 0 0 0 .5-.5z"></path>
-                        <path d="M4 1.667v.383A2.5 2.5 0 0 0 2 4.5v7a2.5 2.5 0 0 0 2 2.45v.383C4 15.253 4.746 16 5.667 16h4.666c.92 0 1.667-.746 1.667-1.667v-.383a2.5 2.5 0 0 0 2-2.45V8h.5a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 0-.5-.5H14v-.5a2.5 2.5 0 0 0-2-2.45v-.383C12 .747 11.254 0 10.333 0H5.667C4.747 0 4 .746 4 1.667M4.5 3h7A1.5 1.5 0 0 1 13 4.5v7a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 3 11.5v-7A1.5 1.5 0 0 1 4.5 3"></path>
+    {% for character in characters %}
+        <div class="row justify-content-center mt-3 mb-3">
+            <div class="col-lg-8 col-xl-10">
+                <div class="card">
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img">
+                        {% if character.profilePicture is empty %}
+                            <rect width="100%" height="100%" fill="#868e96"></rect>
+                        {% else %}
+                            <img src="{{ character.profilePicture }}" width="100%" height="100%" />
+                        {% endif %}
                     </svg>
-                </div>
-                <div class="px-3">
-                    {% if player.playTime >= 24 %}
-                        <h4 class="fw-bold mb-0">{{ (player.playTime / 24)|format_number({fraction_digit: 2}) }} days</h4>
-                    {% else %}
-                        <h4 class="fw-bold mb-0">{{ player.playTime }} hours</h4>
-                    {% endif%}
-                    <p class="mb-0">Play Time</p>
+                    <div class="card-body">
+                        <h4 class="card-title">{{ character.name }}</h4>
+                        <p class="card-text">{{ character.bio }}</p>
+                        <a class="btn btn-primary" type="button" href="/characters/{{ character.id }}">View Character</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="container mt-3 mb-3">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-xl-10">
-            <h1>Previous Attempts</h1>
-            {% if player.attemptNumber > 1 %}
-                <ul class="list-group">
-                    {% for attempt in previous_attempts %}
-                        <li class="list-group-item">
-                            <a class="list-group-link" href="/players/{{ player.id }}/previous/{{ previous_attempt.id }}">Previous Attempt #{{ previous_attempt.number }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="mb-4">No previous attempts!</p>
-            {% endif %}
-        </div>
-    </div>
+    {% endfor %}
 </div>
 
 {% endblock %}

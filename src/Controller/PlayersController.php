@@ -16,6 +16,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Character;
 use App\Entity\Player;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -65,7 +66,35 @@ class PlayersController extends AbstractController
     }
 
     /**
-     * / app_home Route
+     * Get player from database from ID
+     *
+     * @param int $id The Player's ID
+     *
+     * @return Player
+     **/
+    private function getPlayer(int $id): Player
+    {
+        $playerRepository = $this->entityManager
+            ->getRepository(Player::class);
+        return $playerRepository->find($id);
+    }
+
+    /**
+     * Get all characters from database from Player object
+     *
+     * @param Player $player The Player Object
+     *
+     * @return array
+     **/
+    private function getPlayerCharacters(Player $player): array
+    {
+        $characterRepository = $this->entityManager
+            ->getRepository(Character::class);
+        return $characterRepository->findCharactersByPlayer($player);
+    }
+
+    /**
+     * /players app_players Route
      *
      * @return Response
      **/
@@ -78,6 +107,31 @@ class PlayersController extends AbstractController
                 'title' => $this->title,
                 'players' => $this->players,
                 'active_player' => $this->activePlayer,
+            ]
+        );
+    }
+
+    /**
+     * /players/{playerId} app_player Route
+     *
+     * @param string $playerId The Player's ID
+     *
+     * @return Response
+     **/
+    #[Route('/players/{playerId}', name: 'app_player')]
+    public function playerIndex(string $playerId): Response
+    {
+        $player = $this->getPlayer($playerId);
+        $characters = $this->getPlayerCharacters($player);
+
+        return $this->render(
+            'players/player/index.html.twig',
+            [
+                'title' => $player->getName(),
+                'players' => $this->players,
+                'active_player' => $player->getId(),
+                'player' => $player,
+                'characters' => $characters
             ]
         );
     }
