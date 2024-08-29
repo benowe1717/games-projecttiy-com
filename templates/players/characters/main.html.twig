@@ -1,12 +1,5 @@
 {% block main %}
 
-{% set current_attempt = -1 %}
-{% for attempt in character.attempts %}
-    {% if attempt.isCurrent == 1 %}
-        {% set current_attempt = attempt %}
-    {% endif %}
-{% endfor %}
-
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
@@ -40,7 +33,15 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <h1>Milestones Achieved</h1>
-            <p>miletone1, milestone2, milestone3, etc</p>
+            <p>
+                {% for milestone in milestones %}
+                    {% if loop.last %}
+                        {{ milestone.name }} ({{ milestone.description }})
+                    {% else %}
+                        {{ milestone.name }} ({{ milestone.description }}),
+                    {% endif %}
+                {% endfor %}
+            </p>
         </div>
     </div>
 </div>
@@ -66,6 +67,20 @@
                         <h4 class="fw-bold mb-0">{{ current_attempt.timePlayed }} hours</h4>
                     {% endif%}
                     <p class="mb-0">Play Time</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-center d-flex flex-column justify-content-center align-items-center py-3">
+                <div class="bs-icon-md bs-icon-circle bs-icon-primary d-flex flex-shrink-0 justify-content-center align-items-center d-inline-block mb-2 bs-icon lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16" class="bi bi-person-up">
+                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.354-5.854 1.5 1.5a.5.5 0 0 1-.708.708L13 11.707V14.5a.5.5 0 0 1-1 0v-2.793l-.646.647a.5.5 0 0 1-.708-.708l1.5-1.5a.5.5 0 0 1 .708 0M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"></path>
+                        <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1z"></path>
+                    </svg>
+                </div>
+                <div class="px-3">
+                    <h4 class="fw-bold mb-0">{{ current_attempt.adventureLevel }}</h4>
+                    <p class="mb-0">Character Level</p>
                 </div>
             </div>
         </div>
