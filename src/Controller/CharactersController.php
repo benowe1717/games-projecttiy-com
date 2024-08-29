@@ -16,6 +16,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Attempt;
 use App\Entity\Character;
 use App\Entity\Player;
 use Doctrine\ORM\EntityManagerInterface;
@@ -79,13 +80,21 @@ class CharactersController extends AbstractController
         return $characterRepository->find($id);
     }
 
-    // #[Route('/characters', name: 'app_characters')]
-    // public function index(): Response
-    // {
-    //     return $this->render('characters/index.html.twig', [
-    //         'controller_name' => 'CharactersController',
-    //     ]);
-    // }
+    /**
+     * Get previous attempt by attempt id
+     *
+     * @param int       $attemptId The Attempt's ID
+     * @param Character $character The Character object
+     *
+     * @return ?Attempt
+     **/
+    private function getAttempt(int $attemptId, Character $character): ?Attempt
+    {
+        $attemptRepository = $this->entityManager
+            ->getRepository(Attempt::class);
+        return $attemptRepository
+            ->findPreviousAttemptByAttemptId($attemptId, $character);
+    }
 
     /**
      * /characters/{characterId} app_character Route
@@ -125,6 +134,48 @@ class CharactersController extends AbstractController
                 'character' => $character,
                 'current_attempt' => $currentAttempt,
                 'milestones' => $currentMilestones
+            ]
+        );
+    }
+
+    /**
+     * /characters/{characterId}/previous/{attemptId} app_previous Route
+     *
+     * @param string $characterId The Character's ID
+     * @param string $attemptId   The Previous Attempt ID
+     *
+     * @return Response
+     **/
+    #[Route('/characters/{characterId}/previous/{attemptId}', name: 'app_previous')]
+    public function previousIndex(string $characterId, string $attemptId): Response
+    {
+        $character = $this->getCharacter($characterId);
+        $attempt = $this->getAttempt($attemptId, $character);
+
+        if (empty($attempt)) {
+            throw $this->createNotFoundException(
+                'This previous attempt does not belong to this character!'
+            );
+        }
+
+        $previousMilestones = array();
+        $milestones = $attempt->getMilestones();
+        foreach ($milestones as $milestone) {
+            $previousMilestones[] = array(
+                'name' => $milestone->getName(),
+                'description' => $milestone->getDescription()
+            );
+        }
+
+        return $this->render(
+            'players/characters/previous/index.html.twig',
+            [
+                'title' => $character->getName(),
+                'players' => $this->players,
+                'active_player' => $character->getPlayer()->getId(),
+                'character' => $character,
+                'attempt' => $attempt,
+                'milestones' => $previousMilestones
             ]
         );
     }
