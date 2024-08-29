@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Symfony Controller for /players Route
+ * Symfony Controller for /characters Route
  *
  * PHP version 8.3
  *
@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * Symfony Controller for /players Route
+ * Symfony Controller for /characters Route
  *
  * @category  Controller
  * @package   Games-projecttiy-com
@@ -34,7 +34,7 @@ use Symfony\Component\Routing\Attribute\Route;
  * @version   Release: 0.0.1
  * @link      https://github.com/benowe1717/games-projecttiy-com
  **/
-class PlayersController extends AbstractController
+class CharactersController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
 
@@ -66,72 +66,46 @@ class PlayersController extends AbstractController
     }
 
     /**
-     * Get player from database from ID
+     * Get character from database from ID
      *
-     * @param int $id The Player's ID
+     * @param int $id The Character's ID
      *
-     * @return Player
+     * @return Character
      **/
-    private function getPlayer(int $id): Player
-    {
-        $playerRepository = $this->entityManager
-            ->getRepository(Player::class);
-        return $playerRepository->find($id);
-    }
-
-    /**
-     * Get all characters from database from Player object
-     *
-     * @param Player $player The Player Object
-     *
-     * @return array
-     **/
-    private function getPlayerCharacters(Player $player): array
+    private function getCharacter(int $id): Character
     {
         $characterRepository = $this->entityManager
             ->getRepository(Character::class);
-        return $characterRepository->findCharactersByPlayer($player);
+        return $characterRepository->find($id);
     }
 
+    // #[Route('/characters', name: 'app_characters')]
+    // public function index(): Response
+    // {
+    //     return $this->render('characters/index.html.twig', [
+    //         'controller_name' => 'CharactersController',
+    //     ]);
+    // }
+
     /**
-     * /players app_players Route
+     * /characters/{characterId} app_character Route
+     *
+     * @param string $characterId The Character's ID
      *
      * @return Response
      **/
-    #[Route('/players', name: 'app_players')]
-    public function index(): Response
+    #[Route('/characters/{characterId}', name: 'app_character')]
+    public function index(string $characterId): Response
     {
-        return $this->render(
-            'players/index.html.twig',
-            [
-                'title' => $this->title,
-                'players' => $this->players,
-                'active_player' => $this->activePlayer,
-            ]
-        );
-    }
-
-    /**
-     * /players/{playerId} app_player Route
-     *
-     * @param string $playerId The Player's ID
-     *
-     * @return Response
-     **/
-    #[Route('/players/{playerId}', name: 'app_player')]
-    public function playerIndex(string $playerId): Response
-    {
-        $player = $this->getPlayer($playerId);
-        $characters = $this->getPlayerCharacters($player);
+        $character = $this->getCharacter($characterId);
 
         return $this->render(
-            'players/player/index.html.twig',
+            'players/characters/index.html.twig',
             [
-                'title' => $player->getName(),
+                'title' => $character->getName(),
                 'players' => $this->players,
-                'active_player' => $player->getId(),
-                'player' => $player,
-                'characters' => $characters
+                'active_player' => $character->getPlayer()->getId(),
+                'character' => $character
             ]
         );
     }

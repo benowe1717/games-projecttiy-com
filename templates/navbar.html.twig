@@ -16,7 +16,7 @@
                     <a class="nav-link {{ route == 'app_home' ? 'active' }}" href="/">Home</a>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="dropdown-toggle nav-link {{ route == 'app_players' ? 'active' }} {{ route == 'app_player' ? 'active' }} {{ route == 'app_player_previous' ? 'active' }}" aria-expanded="false" data-bs-toggle="dropdown" href="/players">Players</a>
+                    <a class="dropdown-toggle nav-link {{ route == 'app_players' ? 'active' }} {{ route == 'app_player' ? 'active' }} {{ route == 'app_player_previous' ? 'active' }} {{ route == 'app_character' ? 'active' }}" aria-expanded="false" data-bs-toggle="dropdown" href="/players">Players</a>
                     <div class="dropdown-menu">
                         {% for player in players %}
                             <a class="dropdown-item {{ player.id == active_player ? 'active' }}" href="/players/{{ player.id }}">{{ player.name }}</a>
