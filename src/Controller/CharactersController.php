@@ -99,13 +99,32 @@ class CharactersController extends AbstractController
     {
         $character = $this->getCharacter($characterId);
 
+        $currentAttempt = '';
+        $attempts = $character->getAttempts();
+        foreach ($attempts as $attempt) {
+            if ($attempt->isCurrent()) {
+                $currentAttempt = $attempt;
+            }
+        }
+
+        $currentMilestones = array();
+        $milestones = $currentAttempt->getMilestones();
+        foreach ($milestones as $milestone) {
+            $currentMilestones[] = array(
+                'name' => $milestone->getName(),
+                'description' => $milestone->getDescription()
+            );
+        }
+
         return $this->render(
             'players/characters/index.html.twig',
             [
                 'title' => $character->getName(),
                 'players' => $this->players,
                 'active_player' => $character->getPlayer()->getId(),
-                'character' => $character
+                'character' => $character,
+                'current_attempt' => $currentAttempt,
+                'milestones' => $currentMilestones
             ]
         );
     }
