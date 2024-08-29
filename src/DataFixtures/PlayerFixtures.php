@@ -58,10 +58,12 @@ class PlayerFixtures extends Fixture
                 }
 
                 $name = $data[0];
-                $reference = $data[1];
+                $profilePicture = $data[1];
+                $reference = $data[2];
 
                 $player = new Player();
                 $player->setName($name);
+                $player->setProfilePicture($profilePicture);
 
                 $manager->persist($player);
                 $manager->flush();

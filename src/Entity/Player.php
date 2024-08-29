@@ -24,6 +24,9 @@ class Player
     #[ORM\OneToMany(targetEntity: Character::class, mappedBy: 'player')]
     private Collection $characters;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $profilePicture = null;
+
     public function __construct()
     {
         $this->characters = new ArrayCollection();
@@ -79,6 +82,18 @@ class Player
                 $character->setPlayer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?string $profilePicture): static
+    {
+        $this->profilePicture = $profilePicture;
 
         return $this;
     }

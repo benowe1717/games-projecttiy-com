@@ -3,8 +3,11 @@
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
-            <h1>{{ player.name }}</h1>
-            <p>Attempt Number: {{ player.attempt_number }}</p>
+            <h1>{{ character.name }}</h1>
+            <p>Attempt Number: {{ attempt.attemptNumber }}</p>
+            <p>Role: {{ character.role.name }}</p>
+            <p>Primary Job: {{ character.primaryJob ? character.primaryJob.name : 'No assigned job!' }}</p>
+            <p>Secondary Job: {{ character.secondaryJob ? character.secondaryJob.name : 'No assigned job!' }}</p>
         </div>
     </div>
 </div>
@@ -13,12 +16,15 @@
         <div class="col-lg-8 col-xl-10">
             <div class="card">
                 <svg class="bd-placeholder-img card-img-top" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" role="img">
-                    <rect width="100%" height="100%" fill="#868e96"></rect>
+                    {% if character.profilePicture is empty %}
+                        <rect width="100%" height="100%" fill="#868e96"></rect>
+                    {% else %}
+                        <img src="{{ character.profilePicture }}" width="100%" height="100%" />
+                    {% endif %}
                 </svg>
-                <div class="card-body">
-                    <h4 class="card-title">{{ player.character_name }}</h4>
-                    <p class="card-text">{{ player.bio }}</p>
-                </div>
+            </div>
+            <div class="card-body mt-3 mb-3">
+                    <p class="card-text">{{ character.name }} {{ character.bio }}</p>
             </div>
         </div>
     </div>
@@ -27,7 +33,15 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <h1>Milestones Achieved</h1>
-            <p>miletone1, milestone2, milestone3, etc</p>
+            <p>
+                {% for milestone in milestones %}
+                    {% if loop.last %}
+                        {{ milestone.name }} ({{ milestone.description }})
+                    {% else %}
+                        {{ milestone.name }} ({{ milestone.description }}),
+                    {% endif %}
+                {% endfor %}
+            </p>
         </div>
     </div>
 </div>
@@ -35,14 +49,14 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <h1>Cause of Death</h1>
-            <p>Death reason</p>
+            <p>{{ attempt.causeOfDeath }}</p>
         </div>
     </div>
 </div>
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
-            <h1>Player Details</h1>
+            <h1>Character Details</h1>
         </div>
     </div>
     <div class="row justify-content-center">
@@ -55,10 +69,10 @@
                     </svg>
                 </div>
                 <div class="px-3">
-                    {% if player.play_time >= 24 %}
-                        <h4 class="fw-bold mb-0">{{ (player.play_time / 24)|format_number({fraction_digit: 2}) }} days</h4>
+                    {% if attempt.timePlayed >= 24 %}
+                        <h4 class="fw-bold mb-0">{{ (attempt.timePlayed / 24)|format_number({fraction_digit: 2}) }} days</h4>
                     {% else %}
-                        <h4 class="fw-bold mb-0">{{ player.play_time }} hours</h4>
+                        <h4 class="fw-bold mb-0">{{ attempt.timePlayed }} hours</h4>
                     {% endif%}
                     <p class="mb-0">Play Time</p>
                 </div>
@@ -73,7 +87,7 @@
                     </svg>
                 </div>
                 <div class="px-3">
-                    <h4 class="fw-bold mb-0">{{ player.adventure_level }}</h4>
+                    <h4 class="fw-bold mb-0">{{ attempt.adventureLevel }}</h4>
                     <p class="mb-0">Character Level</p>
                 </div>
             </div>
@@ -84,17 +98,17 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <h1>Previous Attempts</h1>
-            {% if previous_attempts|length > 0 %}
-                <ul class="list-group">
-                    {% for attempt in previous_attempts %}
-                        <li class="list-group-item">
-                            <a class="list-group-link" href="/players/{{ player_id }}/previous/{{ attempt.id }}">Previous Attempt #{{ attempt.number }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="mb-4">No previous attempts!</p>
-            {% endif %}
+                {% for attempt in character.attempts %}
+                    {% if attempt.isCurrent == 0 %}
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a class="list-group-link">Previous Attempt #{{ attempt.attemptNumber }}</a>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <p class="mb-4">No previous attempts!</p>
+                    {% endif %}
+                {% endfor %}
         </div>
     </div>
 </div>
