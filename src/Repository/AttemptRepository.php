@@ -1,19 +1,71 @@
 <?php
 
+/**
+ * Doctrine Repository for Attempt Entity
+ *
+ * PHP version 8.3
+ *
+ * @category  Repository
+ * @package   Games-projecttiy-com
+ * @author    Benjamin Owen <benjamin@projecttiy.com>
+ * @copyright 2024 Benjamin Owen
+ * @license   https://mit-license.org/ MIT
+ * @version   CVS: $Id:$
+ * @link      https://github.com/benowe1717/games-projecttiy-com
+ **/
+
 namespace App\Repository;
 
 use App\Entity\Attempt;
+use App\Entity\Character;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Attempt>
+ * Doctrine Repository for Character Entity
+ *
+ * PHP version 8.3
+ *
+ * @category  Repository
+ * @package   Games-projecttiy-com
+ * @author    Benjamin Owen <benjamin@projecttiy.com>
+ * @copyright 2024 Benjamin Owen
+ * @license   https://mit-license.org/ MIT
+ * @version   Release: 0.0.1
+ * @link      https://github.com/benowe1717/games-projecttiy-com
+ * @extends   ServiceEntityRepository<Attempt>
  */
 class AttemptRepository extends ServiceEntityRepository
 {
+    /**
+     * AttemptRepository constructor
+     *
+     * @param ManagerRegistry $registry ManagerRegistry
+     **/
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Attempt::class);
+    }
+
+    /**
+     * Find an Attempt by Attempt ID and Character
+     *
+     * @param int       $attemptId The Attempt's ID
+     * @param Character $character The Character object
+     *
+     * @return ?Attempt
+     **/
+    public function findPreviousAttemptByAttemptId(
+        int $attemptId,
+        Character $character
+    ): ?Attempt {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.id = :id')
+            ->andWhere('a.characterId = :character')
+            ->setParameter('id', $attemptId)
+            ->setParameter('character', $character)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     //    /**
