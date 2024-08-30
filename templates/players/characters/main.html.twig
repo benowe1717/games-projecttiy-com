@@ -32,7 +32,9 @@
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
-            <h1>Milestones Achieved</h1>
+            <h1 id="milestones-achieved">
+                <a class="header-link" href="#milestones-achieved" title="Permalink to this header">Milestones Achieved</a>
+            </h1>
             <p>
                 {% for milestone in milestones %}
                     {% if loop.last %}
@@ -48,7 +50,9 @@
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
-            <h1>Character Details</h1>
+            <h1 id="character-details">
+                <a class="header-link" href="#character-details" title="Permalink to this header">Character Details</a>
+            </h1>
         </div>
     </div>
     <div class="row justify-content-center">
@@ -89,7 +93,9 @@
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
-            <h1>Previous Attempts</h1>
+            <h1 id="previous-attempts">
+                <a class="header-link" href="#previous-attempts" title="Permalink to this header">Previous Attempts</a>
+            </h1>
                 {% for attempt in character.attempts %}
                     {% if attempt.isCurrent == 0 %}
                         <ul class="list-group">
