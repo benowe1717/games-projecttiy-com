@@ -13,13 +13,13 @@
         <div class="row justify-content-center mt-3 mb-3">
             <div class="col-lg-8 col-xl-10">
                 <div class="card">
-                    <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img">
-                        {% if player.profilePicture is empty %}
+                    {% if player.profilePicture is empty %}
+                        <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img">
                             <rect width="100%" height="100%" fill="#868e96"></rect>
-                        {% else %}
-                            <img src="{{ player.profilePicture }}" width="100%" height="100%" />
-                        {% endif %}
-                    </svg>
+                        </svg>
+                    {% else %}
+                        <img src="{{ asset('images/'~player.profilePicture~'') }}" width="100%" height="100%" />
+                    {% endif %}
                     <div class="card-body">
                         <h4 class="card-title">{{ player.name }}</h4>
                         <a class="btn btn-primary" type="button" href="/players/{{ player.id }}">View Characters</a>
@@ -29,32 +29,5 @@
         </div>
     {% endfor %}
 </div>
-
-{# <div class="container mt-3 mb-3">
-    {% for player in players %}
-        {% for character in characters %}
-            {% if player == character.player %}
-                <div class="row justify-content-center mt-3 mb-3">
-                    <div class="col-lg-8 col-xl-10">
-                        <div class="card">
-                            <svg class="bd-placeholder-img card-img-top" width="100%" height="180" xmlns="http://www.w3.org/2000/svg" role="img">
-                                {% if character.profilePicture is empty %}
-                                    <rect width="100%" height="100%" fill="#868e96"></rect>
-                                {% else %}
-                                    <img src="{{ character.profilePicture }}" width="100%" height="100%" />
-                                {% endif %}
-                            </svg>
-                            <div class="card-body">
-                                <h4 class="card-title">{{ character.name }} - {{ player.name }}</h4>
-                                <p class="card-text">{{ character.bio }}</p>
-                                <a class="btn btn-primary" type="button" href="/players/{{ character.id }}">Go</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endif %}
-        {% endfor %}
-    {% endfor %}
-</div> #}
 
 {% endblock %}
