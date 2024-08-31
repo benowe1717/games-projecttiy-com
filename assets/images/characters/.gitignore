@@ -2,7 +2,5 @@
 *
 # Except this file
 !.gitignore
-!jobs/
-!roles/
 # This is to make sure the folder structure is available in prod
 # without having to store images in my repo
