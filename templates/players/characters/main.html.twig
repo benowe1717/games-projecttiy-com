@@ -15,13 +15,13 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <div class="card">
-                <svg class="bd-placeholder-img card-img-top" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" role="img">
-                    {% if character.profilePicture is empty %}
+                {% if character.profilePicture is empty %}
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" role="img">
                         <rect width="100%" height="100%" fill="#868e96"></rect>
-                    {% else %}
-                        <img src="{{ character.profilePicture }}" width="100%" height="100%" />
-                    {% endif %}
-                </svg>
+                    </svg>
+                {% else %}
+                    <img src="{{ asset('images/'~character.profilePicture~'') }}" width="100%" height="100%" />
+                {% endif %}
             </div>
             <div class="card-body mt-3 mb-3">
                     <p class="card-text">{{ character.name }} {{ character.bio }}</p>
