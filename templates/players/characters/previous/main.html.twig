@@ -4,10 +4,26 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <h1>{{ character.name }}</h1>
-            <p>Attempt Number: {{ attempt.attemptNumber }}</p>
-            <p>Role: {{ character.role.name }}</p>
-            <p>Primary Job: {{ character.primaryJob ? character.primaryJob.name : 'No assigned job!' }}</p>
-            <p>Secondary Job: {{ character.secondaryJob ? character.secondaryJob.name : 'No assigned job!' }}</p>
+            <p>Attempt Number: {{ current_attempt.attemptNumber }}</p>
+            <div class="row justify-content-center">
+                <div class="col-md-4">
+                    <img src="{{ asset('images/roles/'~character.role.name~'.png') }}" class="d-block m-auto" width="64" height="64" title="Role: {{ character.role.name }}" />
+                </div>
+                <div class="col-md-4">
+                    {% if character.primaryJob %}
+                        <img src="{{ asset('images/jobs/'~character.primaryJob.name~'.webp') }}" class="d-block m-auto" width="64" height="64" title="Primary Job: {{ character.primaryJob.name }}" />
+                    {% else %}
+                        <p>No Primary Job assigned!</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    {% if character.secondaryJob %}
+                        <img src="{{ asset('images/jobs/'~character.secondaryJob.name~'.webp') }}" class="d-block m-auto" width="64" height="64" title="Secondary Job: {{ character.secondaryJob.name }}" />
+                    {% else %}
+                        <p>No Secondary Job assigned!</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -15,13 +31,13 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
             <div class="card">
-                <svg class="bd-placeholder-img card-img-top" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" role="img">
-                    {% if character.profilePicture is empty %}
+                {% if character.profilePicture is empty %}
+                    <svg class="bd-placeholder-img card-img-top" width="100%" height="360" xmlns="http://www.w3.org/2000/svg" role="img">
                         <rect width="100%" height="100%" fill="#868e96"></rect>
-                    {% else %}
-                        <img src="{{ character.profilePicture }}" width="100%" height="100%" />
-                    {% endif %}
-                </svg>
+                    </svg>
+                {% else %}
+                    <img src="{{ asset('images/'~character.profilePicture~'') }}" width="100%" height="100%" />
+                {% endif %}
             </div>
             <div class="card-body mt-3 mb-3">
                     <p class="card-text">{{ character.name }} {{ character.bio }}</p>
@@ -32,7 +48,9 @@
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
-            <h1>Milestones Achieved</h1>
+            <h1 id="milestones-achieved">
+                <a class="header-link" href="#milestones-achieved" title="Permalink to this header">Milestones Achieved</a>
+            </h1>
             <p>
                 {% for milestone in milestones %}
                     {% if loop.last %}
@@ -56,7 +74,9 @@
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
-            <h1>Character Details</h1>
+            <h1 id="character-details">
+                <a class="header-link" href="#character-details" title="Permalink to this header">Character Details</a>
+            </h1>
         </div>
     </div>
     <div class="row justify-content-center">
@@ -69,10 +89,10 @@
                     </svg>
                 </div>
                 <div class="px-3">
-                    {% if attempt.timePlayed >= 24 %}
-                        <h4 class="fw-bold mb-0">{{ (attempt.timePlayed / 24)|format_number({fraction_digit: 2}) }} days</h4>
+                    {% if current_attempt.timePlayed >= 24 %}
+                        <h4 class="fw-bold mb-0">{{ (current_attempt.timePlayed / 24)|format_number({fraction_digit: 2}) }} days</h4>
                     {% else %}
-                        <h4 class="fw-bold mb-0">{{ attempt.timePlayed }} hours</h4>
+                        <h4 class="fw-bold mb-0">{{ current_attempt.timePlayed }} hours</h4>
                     {% endif%}
                     <p class="mb-0">Play Time</p>
                 </div>
@@ -87,7 +107,7 @@
                     </svg>
                 </div>
                 <div class="px-3">
-                    <h4 class="fw-bold mb-0">{{ attempt.adventureLevel }}</h4>
+                    <h4 class="fw-bold mb-0">{{ current_attempt.adventureLevel }}</h4>
                     <p class="mb-0">Character Level</p>
                 </div>
             </div>
@@ -97,7 +117,9 @@
 <div class="container mt-3 mb-3">
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-10">
-            <h1>Previous Attempts</h1>
+            <h1 id="previous-attempts">
+                <a class="header-link" href="#previous-attempts" title="Permalink to this header">Previous Attempts</a>
+            </h1>
                 {% for attempt in character.attempts %}
                     {% if attempt.isCurrent == 0 %}
                         <ul class="list-group">
