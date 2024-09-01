@@ -120,6 +120,7 @@ class CharactersController extends AbstractController
         $milestones = $currentAttempt->getMilestones();
         foreach ($milestones as $milestone) {
             $currentMilestones[] = array(
+                'id' => $milestone->getId(),
                 'name' => $milestone->getName(),
                 'description' => $milestone->getDescription()
             );
@@ -162,6 +163,7 @@ class CharactersController extends AbstractController
         $milestones = $attempt->getMilestones();
         foreach ($milestones as $milestone) {
             $previousMilestones[] = array(
+                'id' => $milestone->getId(),
                 'name' => $milestone->getName(),
                 'description' => $milestone->getDescription()
             );

@@ -51,15 +51,19 @@
             <h1 id="milestones-achieved">
                 <a class="header-link" href="#milestones-achieved" title="Permalink to this header">Milestones Achieved</a>
             </h1>
-            <p>
+            <div class="row justify-content-center">
                 {% for milestone in milestones %}
-                    {% if loop.last %}
-                        {{ milestone.name }} ({{ milestone.description }})
-                    {% else %}
-                        {{ milestone.name }} ({{ milestone.description }}),
-                    {% endif %}
+                    <div class="col-md-4">
+                        <div class="text-center d-flex flex-column justify-content-center align-items-center py-3">
+                            <img src="{{ asset('images/milestones/milestone-'~milestone.id~'.webp') }}" class="d-block m-auto" width="48" height="48" title="{{ milestone.name }}" />
+                            <div class="px-3">
+                                <h4>{{ milestone.name }}</h4>
+                                <p>{{ milestone.description }}</p>
+                            </div>
+                        </div>
+                    </div>
                 {% endfor %}
-            </p>
+            </div>
         </div>
     </div>
 </div>
