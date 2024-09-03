@@ -169,19 +169,24 @@ class AboutController extends AbstractController
         $msg .= 'forfeit all of your ';
         $msg .= 'items on you and in your storage and delete the character.';
         $this->but_what_if[] = array(
-            'name' => $msg
+            'question' => 'But what if I die to fall damage?',
+            'answer' => $msg
         );
         $this->but_what_if[] = array(
-            'name' => $msg
+            'question' => 'But what if I die to a bug, like lag or wrongful damage?',
+            'answer' => $msg
         );
+        $msg = 'But what if I get stuck in the map or fall through the map?';
         $this->but_what_if[] = array(
-            'name' => 'You are allowed to continue in this circumstance.'
+            'question' => $msg,
+            'answer' => 'You are allowed to continue in this circumstance.'
         );
         $msg = "It's not good etiquette to leave teammates or other players ";
         $msg .= 'hanging. You can complete the Expedition, and then you <b><u>must';
         $msg .= '</u></b> delete your character and forfeit all items and loot.';
         $this->but_what_if[] = array(
-            'name' => $msg
+            'question' => 'But what if I die during an Expedition?',
+            'answer' => $msg
         );
 
         $this->majorGoals[] = array('name' => 'Complete the Main Story Quest');

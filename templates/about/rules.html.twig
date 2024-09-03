@@ -42,7 +42,10 @@
                     <ul class="list-group">
                     {% for rule in but_what_if %}
                         <li class="list-group-item">
-                            <span>- {{ rule.name|raw }}</span>
+                            <div class="ms-2 me-auto">
+                                <div class="fw-bold">{{ rule.question }}</div>
+                            </div>
+                            <span>- {{ rule.answer|raw }}</span>
                         </li>
                     {% endfor %}
                     </ul>
