@@ -10,7 +10,12 @@
     {% endblock %}
 
     {% block main %}
-        {{ include('players/characters/main.html.twig') }}
+        {{ include('players/characters/title.html.twig') }}
+        {{ include('players/characters/bio.html.twig') }}
+        {{ include('players/characters/roles_and_jobs.html.twig') }}
+        {{ include('players/characters/milestones_achieved.html.twig') }}
+        {{ include('players/characters/character_details.html.twig') }}
+        {{ include('players/characters/previous_attempts.html.twig') }}
     {% endblock %}
 
     {% block footer %}

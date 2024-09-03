@@ -1,0 +1,26 @@
+{% block main %}
+
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center splitter mb-4">
+        <div class="col-lg-8 col-xl-10">
+            <h1 id="milestones-achieved">
+                <a class="header-link" href="#milestones-achieved" title="Permalink to this header">Milestones Achieved</a>
+            </h1>
+            <div class="row justify-content-center">
+            {% for milestone in milestones %}
+                <div class="col-md-4">
+                    <div class="text-center d-flex flex-column justify-content-center align-items-center py-3">
+                        <img src="{{ asset('images/milestones/milestone-'~milestone.id~'.webp') }}" class="d-block m-auto" width="48" height="48" title="{{ milestone.name }}" />
+                        <div class="px-3 mt-2">
+                            <h4>{{ milestone.name }}</h4>
+                            <p>{{ milestone.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
