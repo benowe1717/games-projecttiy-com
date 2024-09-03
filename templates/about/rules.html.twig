@@ -43,9 +43,9 @@
                     {% for rule in but_what_if %}
                         <li class="list-group-item">
                             <div class="ms-2 me-auto">
-                                <div class="fw-bold">{{ rule.question }}</div>
+                                <div class="fw-bold">Q: {{ rule.question }}</div>
+                                <span>A: {{ rule.answer|raw }}</span>
                             </div>
-                            <span>- {{ rule.answer|raw }}</span>
                         </li>
                     {% endfor %}
                     </ul>
