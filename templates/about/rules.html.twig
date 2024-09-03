@@ -1,0 +1,55 @@
+{% block main %}
+
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-10">
+            <h1 id="rules">
+                <a class="header-link" href="#rules">Rules</a>
+            </h1>
+            <div class="row justify-content-center splitter mb-4">
+                <div class="col-lg-8 col-xl-10 mb-4">
+                    <h2 id="what-is-allowed">
+                        <a class="header-link" href="#what-is-allowed" title="Permalink to this header">What is allowed?</a>
+                    </h2>
+                    <ul class="list-group">
+                    {% for rule in allowed_rules %}
+                        <li class="list-group-item">
+                            <span>- {{ rule.name }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row justify-content-center splitter mb-4">
+                <div class="col-lg-8 col-xl-10 mb-4">
+                    <h2 id="what-is-not-allowed">
+                        <a class="header-link" href="#what-is-not-allowed" title="Permalink to this header">What is NOT allowed?</a>
+                    </h2>
+                    <ul class="list-group">
+                    {% for rule in not_allowed_rules %}
+                        <li class="list-group-item">
+                            <span>- {{ rule.name|raw }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-8 col-xl-10 mb-4">
+                    <h2 id="but-what-if">
+                        <a class="header-link" href="#but-what-if" title="Permalink to this header">But What If?</a>
+                    </h2>
+                    <ul class="list-group">
+                    {% for rule in but_what_if %}
+                        <li class="list-group-item">
+                            <span>- {{ rule.name|raw }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
