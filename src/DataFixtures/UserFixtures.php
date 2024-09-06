@@ -71,7 +71,8 @@ class UserFixtures extends Fixture
 
                 $email = $data[0];
                 $plainPassword = $data[1];
-                $reference = $data[2];
+                $roles[] = $data[2];
+                $reference = $data[3];
 
                 $user = new User();
                 $user->setEmail($email);
@@ -80,6 +81,7 @@ class UserFixtures extends Fixture
                     $plainPassword
                 );
                 $user->setPassword($hashedPassword);
+                $user->setRoles($roles);
 
                 $manager->persist($user);
                 $manager->flush();
