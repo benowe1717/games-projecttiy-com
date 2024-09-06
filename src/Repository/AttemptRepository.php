@@ -68,6 +68,45 @@ class AttemptRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * Get the total number of Attempts
+     *
+     * @return array
+     **/
+    public function getTotalNumberOfAttempts(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('COUNT(a.id)')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Get the max adventure level of all attempts
+     *
+     * @return array
+     **/
+    public function getMaxAdventureLevel(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('MAX(a.adventureLevel)')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * Get the total amount of time played of all attempts
+     *
+     * @return array
+     **/
+    public function getTotalTimePlayed(): array
+    {
+        return $this->createQueryBuilder('a')
+            ->select('SUM(a.timePlayed)')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Attempt[] Returns an array of Attempt objects
     //     */

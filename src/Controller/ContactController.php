@@ -40,6 +40,10 @@ class ContactController extends AbstractController
     public string $title = 'Contact';
     public array $players = array();
     public int $activePlayer = -1;
+    public string $email;
+    public string $github;
+    public string $mastodonUrl;
+    public string $mastodonUser;
 
     /**
      * HomeController constructor
@@ -50,6 +54,10 @@ class ContactController extends AbstractController
     {
         $this->entityManager = $entityManager;
         $this->getPlayers();
+        $this->email = 'benjamin@projecttiy.com';
+        $this->github = 'https://github.com/benowe1717/games-projecttiy-com/issues';
+        $this->mastodonUrl = 'https://mas.to/@specter2426';
+        $this->mastodonUser = '@specter2426';
     }
 
     /**
@@ -77,7 +85,11 @@ class ContactController extends AbstractController
             [
                 'title' => $this->title,
                 'players' => $this->players,
-                'active_player' => $this->activePlayer
+                'active_player' => $this->activePlayer,
+                'email' => $this->email,
+                'github' => $this->github,
+                'mastodon_url' => $this->mastodonUrl,
+                'mastodon_user' => $this->mastodonUser
             ]
         );
     }

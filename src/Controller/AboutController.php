@@ -16,6 +16,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Attempt;
 use App\Entity\Player;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,6 +45,8 @@ class AboutController extends AbstractController
     private array $allowed_rules = array();
     private array $not_allowed_rules = array();
     private array $but_what_if = array();
+    private array $majorGoals = array();
+    private array $minorGoals = array();
 
     /**
      * HomeController constructor
@@ -66,6 +69,51 @@ class AboutController extends AbstractController
         $playerRepository = $this->entityManager
             ->getRepository(Player::class);
         $this->players = $playerRepository->findAll();
+    }
+
+    /**
+     * Get total number of attempts
+     *
+     * @return int
+     **/
+    private function getTotalAttempts(): int
+    {
+        $attemptRepository = $this->entityManager->getRepository(Attempt::class);
+        $attempts = $attemptRepository->getTotalNumberOfAttempts();
+        if (!$attempts) {
+            return -1;
+        }
+        return $attempts[1];
+    }
+
+    /**
+     * Get max adventure level
+     *
+     * @return int
+     **/
+    private function getMaxLevel(): int
+    {
+        $attemptRepository = $this->entityManager->getRepository(Attempt::class);
+        $adventureLevel = $attemptRepository->getMaxAdventureLevel();
+        if (!$adventureLevel) {
+            return -1;
+        }
+        return $adventureLevel[1];
+    }
+
+    /**
+     * Get total time played
+     *
+     * @return int
+     **/
+    private function getTimePlayed(): int
+    {
+        $attemptRepository = $this->entityManager->getRepository(Attempt::class);
+        $timePlayed = $attemptRepository->getTotalTimePlayed();
+        if (!$timePlayed) {
+            return -1;
+        }
+        return $timePlayed[1];
     }
 
     /**
@@ -112,27 +160,42 @@ class AboutController extends AbstractController
             'You cannot perform a Tradeskill outside of your designated Job'
         );
         $msg = 'On death, you cannot load up your character and save any items. ';
-        $msg .= 'You must forfeit all items on you or in your storage on death';
+        $msg .= 'You <b><u>must</u></b> forfeit all items on you or in your ';
+        $msg .= 'storage on death';
         $this->not_allowed_rules[] = array(
             'name' => $msg
         );
-        $msg = 'That is a death. You lose the run and must forfeit all of your ';
+        $msg = 'That is a death. You lose the run and <b><u>must</u></b> ';
+        $msg .= 'forfeit all of your ';
         $msg .= 'items on you and in your storage and delete the character.';
         $this->but_what_if[] = array(
-            'name' => $msg
+            'question' => 'But what if I die to fall damage?',
+            'answer' => $msg
         );
         $this->but_what_if[] = array(
-            'name' => $msg
+            'question' => 'But what if I die to a bug, like lag or wrongful damage?',
+            'answer' => $msg
         );
+        $msg = 'But what if I get stuck in the map or fall through the map?';
         $this->but_what_if[] = array(
-            'name' => 'You are allowed to continue in this circumstance.'
+            'question' => $msg,
+            'answer' => 'You are allowed to continue in this circumstance.'
         );
         $msg = "It's not good etiquette to leave teammates or other players ";
-        $msg .= 'hanging. You can complete the Expedition, and then you must ';
-        $msg .= 'delete your character and forfeit all items and loot.';
+        $msg .= 'hanging. You can complete the Expedition, and then you <b><u>must';
+        $msg .= '</u></b> delete your character and forfeit all items and loot.';
         $this->but_what_if[] = array(
-            'name' => $msg
+            'question' => 'But what if I die during an Expedition?',
+            'answer' => $msg
         );
+
+        $this->majorGoals[] = array('name' => 'Complete the Main Story Quest');
+        $this->majorGoals[] = array('name' => 'Achieve level 65');
+        $this->majorGoals[] = array('name' => 'Complete All Expeditions');
+
+        $this->minorGoals[] = array('name' => 'Max both weapon trees');
+        $this->minorGoals[] = array('name' => 'Complete a full build');
+        $this->minorGoals[] = array('name' => 'Max Job Tradeskills');
 
         return $this->render(
             'about/index.html.twig',
@@ -142,7 +205,12 @@ class AboutController extends AbstractController
                 'active_player' => $this->activePlayer,
                 'allowed_rules' => $this->allowed_rules,
                 'not_allowed_rules' => $this->not_allowed_rules,
-                'but_what_if' => $this->but_what_if
+                'but_what_if' => $this->but_what_if,
+                'major_goals' => $this->majorGoals,
+                'minor_goals' => $this->minorGoals,
+                'play_time' => $this->getTimePlayed(),
+                'adventure_level' => $this->getMaxLevel(),
+                'attempts' => $this->getTotalAttempts()
             ]
         );
     }

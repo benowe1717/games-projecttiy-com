@@ -1,0 +1,32 @@
+{% block main %}
+
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center splitter mb-4">
+        <div class="col-lg-8 col-xl-10">
+            <h1 id="roles-and-jobs">
+                <a class="header-link" href="#roles-and-jobs" title="Permalink to this header">Roles and Jobs</a>
+            </h1>
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-4 py-3">
+                    <img src="{{ asset('images/roles/'~character.role.name~'.png') }}" class="d-block m-auto" width="64" height="64" title="Role: {{ character.role.name }}" />
+                </div>
+                <div class="col-md-4 py-3">
+                    {% if character.primaryJob %}
+                    <img src="{{ asset('images/jobs/'~character.primaryJob.name~'.webp') }}" class="d-block m-auto" width="64" height="64" title="Primary Job: {{ character.primaryJob.name }}" />
+                    {% else %}
+                    <p>No Primary Job assigned!</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-4 py-3">
+                    {% if character.secondaryJob %}
+                    <img src="{{ asset('images/jobs/'~character.secondaryJob.name~'.webp') }}" class="d-block m-auto" width="64" height="64" title="Secondary Job: {{ character.secondaryJob.name }}" />
+                    {% else %}
+                    <p>No Secondary Job assigned!</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
