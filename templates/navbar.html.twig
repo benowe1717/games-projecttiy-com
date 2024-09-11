@@ -32,8 +32,13 @@
                     <a class="nav-link {{ route == 'app_contact' ? 'active' }}" href="/contact">Contact</a>
                 </li>
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <li class="nav-item">
-                    <a class="nav-link {{ route == 'app_admin' ? 'active' }}" href="/admin">Admin</a>
+                <li class="nav-item dropdown">
+                    <a class="dropdown-toggle nav-link {{ route == 'app_admin' ? 'active' }} {{ route == 'app_admin_update_attempt' ? 'active' }} {{ route == 'app_admin_new_attempt' ? 'active' }} {{ route == 'app_admin_new_character' ? 'active' }}"  data-bs-toggle="dropdown" href="/admin">Admin</a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item {{ route == 'app_admin_update_attempt' ? 'active' }}" href="/admin/update_attempt">Update Attempt</a>
+                        <a class="dropdown-item {{ route == 'app_admin_new_attempt' ? 'active' }}" href="/admin/new_attempt">New Attempt</a>
+                        <a class="dropdown-item {{ route == 'app_admin_new_character' ? 'active' }}" href="/admin/new_character">New Character</a>
+                    </div>
                 </li>
                 {% endif %}
             </ul>
