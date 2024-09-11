@@ -18,6 +18,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Player;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
@@ -31,7 +32,7 @@ use Doctrine\Persistence\ObjectManager;
  * @version   Release: 0.0.1
  * @link      https://github.com/benowe1717/games-projecttiy-com
  **/
-class PlayerFixtures extends Fixture
+class PlayerFixtures extends Fixture implements DependentFixtureInterface
 {
     /**
      * Load data into database
@@ -59,11 +60,16 @@ class PlayerFixtures extends Fixture
 
                 $name = $data[0];
                 $profilePicture = $data[1];
-                $reference = $data[2];
+                $user = $data[2];
+                $reference = $data[3];
 
                 $player = new Player();
                 $player->setName($name);
                 $player->setProfilePicture($profilePicture);
+
+                $ref = "user.{$user}";
+                $userRef = $this->getReference($ref);
+                $player->setUser($userRef);
 
                 $manager->persist($player);
                 $manager->flush();
@@ -74,5 +80,17 @@ class PlayerFixtures extends Fixture
                 $row++;
             }
         }
+    }
+
+    /**
+     * Pull in dependent DataFixtures
+     *
+     * @return List<class-string<FixtureInterface>>
+     **/
+    public function getDependencies(): array
+    {
+        return [
+            UserFixtures::class,
+        ];
     }
 }

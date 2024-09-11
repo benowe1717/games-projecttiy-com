@@ -68,6 +68,7 @@ class UserFixtures extends Fixture
                     $row++;
                     continue;
                 }
+                $roles = array();
 
                 $email = $data[0];
                 $plainPassword = $data[1];
