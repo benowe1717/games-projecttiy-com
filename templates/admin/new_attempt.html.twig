@@ -1,0 +1,22 @@
+<div class="row justify-content-start mt-3 mb-3">
+    <form method="post">
+        {% if current_attempt.causeOfDeath == 0 %}
+        <div class="mb-3">
+            <label for="causeOfDeath-1" class="form-label">Cause of Death (on previous attempt)</label>
+            <input id="causeOfDeath-1" class="form-control" type="text" name="causeOfDeath" placeholder="Cause of death">
+        </div>
+        {% endif %}
+        <div class="mb-3">
+            <label for="character-1" class="form-label">Character Select</label>
+            <select class="form-select">
+                <option selected>Select...</option>
+                {% for character in characters %}
+                    <option value="{{ character.id }}">{{ character.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <button class="btn btn-secondary d-block w-10" type="submit">Start</button>
+        </div>
+    </form>
+</div>
