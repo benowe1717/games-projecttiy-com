@@ -1,0 +1,28 @@
+<div class="row justify-content-start mt-3 mb-3">
+    <form method="post">
+        <div class="mb-3">
+            <label for="adventureLevel-1" class="form-label">Adventure Level</label>
+            <input id="adventureLevel-1" class="form-control" type="number" name="adventureLevel" placeholder="1" min="1" max="65" required autofocus>
+        </div>
+        <div class="mb-3">
+            <label for="timePlayed-1" class="form-label">Time Played (in hours)</label>
+            <input id="timePlayed-1" class="form-control" type="number" name="timePlayed" placeholder="1" min="1" required>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Expeditions Completed</label>
+            {% for milestone in milestones %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="{{ milestone.id }}" id="milestone-{{ milestone.id }}">
+                <label class="form-check-label" for="milestone-{{ milestone.id }}">{{ milestone.name }} ({{ milestone.description }})</label>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="mb-3">
+            <label for="causeOfDeath-1" class="form-label">Cause of Death</label>
+            <input id="causeOfDeath-1" class="form-control" type="text" name="causeOfDeath" placeholder="Cause of death">
+        </div>
+        <div>
+            <button class="btn btn-secondary d-block w-10" type="submit">Update</button>
+        </div>
+    </form>
+</div>
