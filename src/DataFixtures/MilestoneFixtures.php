@@ -59,11 +59,13 @@ class MilestoneFixtures extends Fixture
 
                 $name = $data[0];
                 $description = $data[1];
-                $reference = $data[2];
+                $category = $data[2];
+                $reference = $data[3];
 
                 $milestone = new Milestone();
                 $milestone->setName($name);
                 $milestone->setDescription($description);
+                $milestone->setCategory($category);
 
                 $manager->persist($milestone);
                 $manager->flush();
