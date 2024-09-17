@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Player;
 use App\Entity\User;
+use App\Form\NewAttemptType;
 use App\Form\UpdateAttemptType;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
@@ -154,11 +155,14 @@ class AdminController extends AbstractController
     #[Route('/admin', name: 'app_admin')]
     public function index(Request $request): Response
     {
-        // Begin Update Attempt tab and form
+        // Data for all tabs and forms
         $currentUser = $this->getUser();
         $myPlayer = $this->getPlayer($currentUser);
         $myCharacters = $this->getCharacters($myPlayer);
         $currentAttempt = $this->getCurrentAttempt($myPlayer);
+        $attempt = new Attempt();
+
+        // Begin Update Attempt tab and form
         $completedMilestones = array();
         $hasAttempts = 1;
 
@@ -166,7 +170,6 @@ class AdminController extends AbstractController
             $hasAttempts = 0;
         }
 
-        $attempt = new Attempt();
         $attempt = $currentAttempt;
         foreach ($currentAttempt->getMilestones() as $milestone) {
             $attempt->addMilestone($milestone);
@@ -203,6 +206,25 @@ class AdminController extends AbstractController
         }
         // End Update Attempt tab
 
+        // Start New Attempt tab
+        $hasCauseOfDeath = 0;
+        $newAttempt = new Attempt();
+        $newAttempt->setCharacterId($currentAttempt->getCharacterId());
+
+        if (!empty($currentAttempt->getCauseOfDeath())) {
+            $hasCauseOfDeath = 1;
+        }
+        $newAttemptForm = $this->createForm(
+            NewAttemptType::class,
+            $newAttempt,
+            [
+                'characters' => $myCharacters,
+            ]
+        );
+        $newAttemptForm->handleRequest($request);
+        $errors = $newAttemptForm->getErrors(true);
+        // End New Attempt tab
+
         $characters[] = array('id' => 1, 'name' => 'characterName');
         $roles[] = array('id' => 1, 'name' => 'Damage');
         $roles[] = array('id' => 2, 'name' => 'Tank');
@@ -238,6 +260,8 @@ class AdminController extends AbstractController
                 'update_attempt_form' => $updateAttemptForm,
                 'completed_milestones' => $completedMilestones,
                 'has_attempts' => $hasAttempts,
+                'new_attempt_form' => $newAttemptForm,
+                'has_cause_of_death' => $hasCauseOfDeath,
             ]
         );
     }
