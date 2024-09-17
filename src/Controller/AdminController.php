@@ -146,6 +146,25 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Get the user's player's character's most recent attempt
+     *
+     * @param Player $myPlayer The current logged in user's player
+     *
+     * @return Attempt
+     **/
+    public function getMostRecentAttempt(Player $myPlayer): Attempt
+    {
+        $attemptRepository = $this->entityManager
+            ->getRepository(Attempt::class);
+        $myCharacters = $myPlayer->getCharacters();
+        foreach ($myCharacters as $character) {
+            $attempt = $attemptRepository
+                ->getMostRecentAttemptbyCharacter($character);
+            return $attempt;
+        }
+    }
+
+    /**
      * / app_admin Route
      *
      * @param Request $request Form data
@@ -207,13 +226,21 @@ class AdminController extends AbstractController
         // End Update Attempt tab
 
         // Start New Attempt tab
-        $hasCauseOfDeath = 0;
+        $hasCauseOfDeath = 1;
+        $mostRecentAttempt = $this->getMostRecentAttempt($myPlayer);
         $newAttempt = new Attempt();
-        $newAttempt->setCharacterId($currentAttempt->getCharacterId());
+        $newAttempt->setCharacterId($mostRecentAttempt->getCharacterId());
+        $newAttempt->setAttemptNumber($mostRecentAttempt->getAttemptNumber() + 1);
+        $newAttempt->setCurrent(true);
+        $newAttempt->setAdventureLevel(1);
+        $newAttempt->setTimePlayed(0);
 
-        if (!empty($currentAttempt->getCauseOfDeath())) {
-            $hasCauseOfDeath = 1;
+        if ($currentAttempt->getId() === $mostRecentAttempt->getId()) {
+            if (empty($currentAttempt->getCauseOfDeath())) {
+                $hasCauseOfDeath = 0;
+            }
         }
+
         $newAttemptForm = $this->createForm(
             NewAttemptType::class,
             $newAttempt,
@@ -223,6 +250,28 @@ class AdminController extends AbstractController
         );
         $newAttemptForm->handleRequest($request);
         $errors = $newAttemptForm->getErrors(true);
+
+        if ($newAttemptForm->isSubmitted() && $newAttemptForm->isValid()) {
+            $newAttempt = $newAttemptForm->getData();
+
+            // If causeOfDeath is set, update $currentAttempt
+            if (!empty($newAttempt->getCauseOfDeath())) {
+                $currentAttempt->setCauseOfDeath($newAttempt->getCauseOfDeath());
+                $currentAttempt->setCurrent(false);
+
+                // Update $currentAttempt
+                $this->entityManager->persist($currentAttempt);
+                $this->entityManager->flush();
+            }
+
+            // Update $newAttempt
+            $this->entityManager->persist($newAttempt);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'New Attempt started successfully!');
+
+            return $this->redirectToRoute('app_admin');
+        }
         // End New Attempt tab
 
         $characters[] = array('id' => 1, 'name' => 'characterName');

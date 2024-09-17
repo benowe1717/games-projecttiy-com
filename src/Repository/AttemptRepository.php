@@ -107,6 +107,24 @@ class AttemptRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /**
+     * Get the most recent attempt for a character
+     *
+     * @param Character $characterId The character's id
+     *
+     * @return Attempt
+     **/
+    public function getMostRecentAttemptbyCharacter(Character $characterId): Attempt
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.characterId = :val')
+            ->setParameter('val', $characterId)
+            ->orderBy('a.id', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     //    /**
     //     * @return Attempt[] Returns an array of Attempt objects
     //     */

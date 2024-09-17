@@ -1,6 +1,5 @@
 <div class="row justify-content-start mt-3 mb-3">
     <div class="col-lg-12 col-xl-12">
-        {{ dump(new_attempt_form) }}
         <form method="{{ new_attempt_form.vars.method }}" id="{{ new_attempt_form.vars.id }}" name="{{ new_attempt_form.vars.full_name }}">
             <div class="mb-3">
                 <label class="form-label" for="{{ new_attempt_form.characterId.vars.id }}">{{ new_attempt_form.characterId.vars.label }}</label>
