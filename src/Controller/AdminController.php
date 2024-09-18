@@ -17,8 +17,8 @@
 namespace App\Controller;
 
 use App\Entity\Attempt;
+use App\Entity\Character;
 use App\Entity\Job;
-use App\Entity\Milestone;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -26,9 +26,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Player;
 use App\Entity\User;
 use App\Form\NewAttemptType;
+use App\Form\NewCharacterType;
 use App\Form\UpdateAttemptType;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Symfony Controller for /admin Route
@@ -49,7 +53,6 @@ class AdminController extends AbstractController
     public array $players = array();
     public int $activePlayer = -1;
     public array $milestones = array();
-    public array $jobs = array();
 
     /**
      * HomeController constructor
@@ -60,8 +63,6 @@ class AdminController extends AbstractController
     {
         $this->entityManager = $entityManager;
         $this->getPlayers();
-        $this->getMilestones();
-        $this->getJobs();
     }
 
     /**
@@ -77,27 +78,27 @@ class AdminController extends AbstractController
     }
 
     /**
-     * Get all milestones from the database
+     * Get all primary jobs from the database
      *
-     * @return void
+     * @return array
      **/
-    private function getMilestones(): void
-    {
-        $milestoneRepository = $this->entityManager
-            ->getRepository(Milestone::class);
-        $this->milestones = $milestoneRepository->findAll();
-    }
-
-    /**
-     * Get all jobs from the database
-     *
-     * @return void
-     **/
-    private function getJobs(): void
+    private function getPrimaryJobs(): array
     {
         $jobRepository = $this->entityManager
             ->getRepository(Job::class);
-        $this->jobs = $jobRepository->findAll();
+        return $jobRepository->getPrimaryJobs();
+    }
+
+    /**
+     * Get all secondary jobs from the database
+     *
+     * @return array
+     **/
+    private function getSecondaryJobs(): array
+    {
+        $jobRepository = $this->entityManager
+            ->getRepository(Job::class);
+        return $jobRepository->getSecondaryJobs();
     }
 
     /**
@@ -167,13 +168,16 @@ class AdminController extends AbstractController
     /**
      * / app_admin Route
      *
-     * @param Request $request Form data
+     * @param Request  $request  Form data
+     * @param Autowire $photoDir Directory for picture uploads
      *
      * @return Response
      **/
     #[Route('/admin', name: 'app_admin')]
-    public function index(Request $request): Response
-    {
+    public function index(
+        Request $request,
+        #[Autowire('%photo_dir%')] string $photoDir
+    ): Response {
         // Data for all tabs and forms
         $currentUser = $this->getUser();
         $myPlayer = $this->getPlayer($currentUser);
@@ -250,6 +254,9 @@ class AdminController extends AbstractController
         );
         $newAttemptForm->handleRequest($request);
         $errors = $newAttemptForm->getErrors(true);
+        foreach ($errors as $error) {
+            $this->addFlash('error', $error->getMessage());
+        }
 
         if ($newAttemptForm->isSubmitted() && $newAttemptForm->isValid()) {
             $newAttempt = $newAttemptForm->getData();
@@ -274,26 +281,49 @@ class AdminController extends AbstractController
         }
         // End New Attempt tab
 
-        $characters[] = array('id' => 1, 'name' => 'characterName');
-        $roles[] = array('id' => 1, 'name' => 'Damage');
-        $roles[] = array('id' => 2, 'name' => 'Tank');
-        $roles[] = array('id' => 3, 'name' => 'Healer');
-
-        $primaryJobs = array();
-        $primaryJobsList = array('Armorer', 'Weaponsmith', 'Engineer');
-
-        $secondaryJobs = array();
-        $secondaryJobsList = array('Provisioner', 'Alchemist', 'Artisan');
-
-        foreach ($this->jobs as $job) {
-            if (in_array($job->getName(), $primaryJobsList)) {
-                $primaryJobs[] = $job;
-            }
-
-            if (in_array($job->getName(), $secondaryJobsList)) {
-                $secondaryJobs[] = $job;
-            }
+        // Start New Character tab
+        $newCharacter = new Character();
+        $newCharacter->setPlayer($myPlayer);
+        $newCharacterForm = $this->createForm(
+            NewCharacterType::class,
+            $newCharacter,
+            [
+                'primary_jobs' => $this->getPrimaryJobs(),
+                'secondary_jobs' => $this->getSecondaryJobs(),
+            ]
+        );
+        $newCharacterForm->handleRequest($request);
+        $errors = $newCharacterForm->getErrors(true);
+        foreach ($errors as $error) {
+            $this->addFlash('error', $error->getMessage());
         }
+
+        if ($newCharacterForm->isSubmitted() && $newCharacterForm->isValid()) {
+            $fileAttachment = $newCharacterForm->get('fileAttachment')->getData();
+            $newCharacter = $newCharacterForm->getData();
+
+            if ($fileAttachment) {
+                $extension = $fileAttachment->guessExtension();
+                if (!$extension) {
+                    $extension = ".bad_upload";
+                }
+
+                $playerName = strtolower($myPlayer->getName());
+                $characterName = strtolower($newCharacter->getName());
+                $filename = "{$playerName}-{$characterName}.{$extension}";
+                $newCharacter->setProfilePicture($filename);
+
+                $fileAttachment->move($photoDir, $filename);
+            }
+
+            $this->entityManager->persist($newCharacter);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'New Character started successfully!');
+
+            return $this->redirectToRoute('app_admin');
+        }
+        // End New Character tab
 
         return $this->render(
             'admin/index.html.twig',
@@ -302,15 +332,12 @@ class AdminController extends AbstractController
                 'players' => $this->players,
                 'active_player' => $this->activePlayer,
                 'milestones' => $this->milestones,
-                'characters' => $characters,
-                'roles' => $roles,
-                'primary_jobs' => $primaryJobs,
-                'secondary_jobs' => $secondaryJobs,
                 'update_attempt_form' => $updateAttemptForm,
                 'completed_milestones' => $completedMilestones,
                 'has_attempts' => $hasAttempts,
                 'new_attempt_form' => $newAttemptForm,
                 'has_cause_of_death' => $hasCauseOfDeath,
+                'new_character_form' => $newCharacterForm,
             ]
         );
     }
