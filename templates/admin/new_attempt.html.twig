@@ -1,22 +1,29 @@
 <div class="row justify-content-start mt-3 mb-3">
-    <form method="post">
-        {% if current_attempt.causeOfDeath == 0 %}
-        <div class="mb-3">
-            <label for="causeOfDeath-1" class="form-label">Cause of Death (on previous attempt)</label>
-            <input id="causeOfDeath-1" class="form-control" type="text" name="causeOfDeath" placeholder="Cause of death">
-        </div>
-        {% endif %}
-        <div class="mb-3">
-            <label for="character-1" class="form-label">Character Select</label>
-            <select class="form-select">
-                <option selected>Select...</option>
-                {% for character in characters %}
-                    <option value="{{ character.id }}">{{ character.name }}</option>
+    <div class="col-lg-12 col-xl-12">
+        <form method="{{ new_attempt_form.vars.method }}" id="{{ new_attempt_form.vars.id }}" name="{{ new_attempt_form.vars.full_name }}">
+            <div class="mb-3">
+                <label class="form-label" for="{{ new_attempt_form.characterId.vars.id }}">{{ new_attempt_form.characterId.vars.label }}</label>
+                <select class="form-select" id="{{ new_attempt_form.characterId.vars.id }}" name="{{ new_attempt_form.characterId.vars.full_name }}">
+                {% for choice in new_attempt_form.characterId.vars.choices %}
+                <option value="{{ choice.value }}">{{ choice.label }}</option>
                 {% endfor %}
-            </select>
-        </div>
-        <div>
-            <button class="btn btn-secondary d-block w-10" type="submit">Start</button>
-        </div>
-    </form>
+                </select>
+            </div>
+            {% if has_cause_of_death == 0 %}
+            <div class="mb-3">
+                <label class="form-label" for="{{ new_attempt_form.causeOfDeath.vars.id }}">{{ new_attempt_form.causeOfDeath.vars.label }}</label>
+                <input class="form-control" id="{{ new_attempt_form.causeOfDeath.vars.id }}" name="{{ new_attempt_form.causeOfDeath.vars.full_name }}" value="{{ new_attempt_form.causeOfDeath.vars.value }}" type="text" minlength="3" maxlength="255" placeholder="Cause of death">
+                {% if new_attempt_form.causeOfDeath.vars.errors|length > 0 %}
+                <div class="alert alert-danger mt-1" role="alert">
+                    {{ new_attempt_form.causeOfDeath.vars.errors }}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+            <div class="mb-3">
+                <button class="btn btn-secondary d-block w-10" id="{{ new_attempt_form.submit.vars.id }}" name="{{ new_attempt_form.submit.vars.full_name }}">{{ new_attempt_form.submit.vars.label }}</button>
+            </div>
+            <input id="{{ new_attempt_form.children._token.vars.id }}" name="{{ new_attempt_form.children._token.vars.full_name }}" value="{{ new_attempt_form.children._token.vars.value }}" type="hidden">
+        </form>
+    </div>
 </div>

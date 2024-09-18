@@ -44,9 +44,9 @@
             <div class="mb-3">
                 <label class="form-label" for="{{ update_attempt_form.causeOfDeath.vars.id }}">{{ update_attempt_form.causeOfDeath.vars.label }}</label>
                 <input class="form-control" id="{{ update_attempt_form.causeOfDeath.vars.id }}" name="{{ update_attempt_form.causeOfDeath.vars.full_name }}" value="{{ update_attempt_form.causeOfDeath.vars.value }}" type="text" minlength="3" maxlength="255" placeholder="Cause of death">
-                {% if update_attempt_form.timePlayed.vars.errors|length > 0 %}
+                {% if update_attempt_form.causeOfDeath.vars.errors|length > 0 %}
                 <div class="alert alert-danger mt-1" role="alert">
-                    {{ update_attempt_form.timePlayed.vars.errors }}
+                    {{ update_attempt_form.causeOfDeath.vars.errors }}
                 </div>
                 {% endif %}
             </div>

@@ -25,6 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Player;
 use App\Entity\User;
+use App\Form\NewAttemptType;
 use App\Form\UpdateAttemptType;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
@@ -145,6 +146,25 @@ class AdminController extends AbstractController
     }
 
     /**
+     * Get the user's player's character's most recent attempt
+     *
+     * @param Player $myPlayer The current logged in user's player
+     *
+     * @return Attempt
+     **/
+    public function getMostRecentAttempt(Player $myPlayer): Attempt
+    {
+        $attemptRepository = $this->entityManager
+            ->getRepository(Attempt::class);
+        $myCharacters = $myPlayer->getCharacters();
+        foreach ($myCharacters as $character) {
+            $attempt = $attemptRepository
+                ->getMostRecentAttemptbyCharacter($character);
+            return $attempt;
+        }
+    }
+
+    /**
      * / app_admin Route
      *
      * @param Request $request Form data
@@ -154,11 +174,14 @@ class AdminController extends AbstractController
     #[Route('/admin', name: 'app_admin')]
     public function index(Request $request): Response
     {
-        // Begin Update Attempt tab and form
+        // Data for all tabs and forms
         $currentUser = $this->getUser();
         $myPlayer = $this->getPlayer($currentUser);
         $myCharacters = $this->getCharacters($myPlayer);
         $currentAttempt = $this->getCurrentAttempt($myPlayer);
+        $attempt = new Attempt();
+
+        // Begin Update Attempt tab and form
         $completedMilestones = array();
         $hasAttempts = 1;
 
@@ -166,7 +189,6 @@ class AdminController extends AbstractController
             $hasAttempts = 0;
         }
 
-        $attempt = new Attempt();
         $attempt = $currentAttempt;
         foreach ($currentAttempt->getMilestones() as $milestone) {
             $attempt->addMilestone($milestone);
@@ -203,6 +225,55 @@ class AdminController extends AbstractController
         }
         // End Update Attempt tab
 
+        // Start New Attempt tab
+        $hasCauseOfDeath = 1;
+        $mostRecentAttempt = $this->getMostRecentAttempt($myPlayer);
+        $newAttempt = new Attempt();
+        $newAttempt->setCharacterId($mostRecentAttempt->getCharacterId());
+        $newAttempt->setAttemptNumber($mostRecentAttempt->getAttemptNumber() + 1);
+        $newAttempt->setCurrent(true);
+        $newAttempt->setAdventureLevel(1);
+        $newAttempt->setTimePlayed(0);
+
+        if ($currentAttempt->getId() === $mostRecentAttempt->getId()) {
+            if (empty($currentAttempt->getCauseOfDeath())) {
+                $hasCauseOfDeath = 0;
+            }
+        }
+
+        $newAttemptForm = $this->createForm(
+            NewAttemptType::class,
+            $newAttempt,
+            [
+                'characters' => $myCharacters,
+            ]
+        );
+        $newAttemptForm->handleRequest($request);
+        $errors = $newAttemptForm->getErrors(true);
+
+        if ($newAttemptForm->isSubmitted() && $newAttemptForm->isValid()) {
+            $newAttempt = $newAttemptForm->getData();
+
+            // If causeOfDeath is set, update $currentAttempt
+            if (!empty($newAttempt->getCauseOfDeath())) {
+                $currentAttempt->setCauseOfDeath($newAttempt->getCauseOfDeath());
+                $currentAttempt->setCurrent(false);
+
+                // Update $currentAttempt
+                $this->entityManager->persist($currentAttempt);
+                $this->entityManager->flush();
+            }
+
+            // Update $newAttempt
+            $this->entityManager->persist($newAttempt);
+            $this->entityManager->flush();
+
+            $this->addFlash('success', 'New Attempt started successfully!');
+
+            return $this->redirectToRoute('app_admin');
+        }
+        // End New Attempt tab
+
         $characters[] = array('id' => 1, 'name' => 'characterName');
         $roles[] = array('id' => 1, 'name' => 'Damage');
         $roles[] = array('id' => 2, 'name' => 'Tank');
@@ -238,6 +309,8 @@ class AdminController extends AbstractController
                 'update_attempt_form' => $updateAttemptForm,
                 'completed_milestones' => $completedMilestones,
                 'has_attempts' => $hasAttempts,
+                'new_attempt_form' => $newAttemptForm,
+                'has_cause_of_death' => $hasCauseOfDeath,
             ]
         );
     }

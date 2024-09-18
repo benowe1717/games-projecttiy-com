@@ -7,7 +7,8 @@
                 <a class="header-link" href="#milestones-achieved" title="Permalink to this header">Milestones Achieved</a>
             </h1>
             <div class="row justify-content-center">
-            {% for milestone in milestones %}
+                {% if milestones|length >= 1 %}
+                {% for milestone in milestones %}
                 <div class="col-md-4">
                     <div class="text-center d-flex flex-column justify-content-center align-items-center py-3">
                         <img src="{{ asset('images/milestones/milestone-'~milestone.id~'.webp') }}" class="d-block m-auto" width="48" height="48" title="{{ milestone.name }}" />
@@ -17,7 +18,14 @@
                         </div>
                     </div>
                 </div>
-            {% endfor %}
+                {% endfor %}
+                {% else %}
+                <div class="col-md-12">
+                    <div class="py-3">
+                        <p>No milestones achieved!</p>
+                    </div>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>
