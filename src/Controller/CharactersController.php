@@ -147,7 +147,7 @@ class CharactersController extends AbstractController
      *
      * @return Response
      **/
-    #[Route('/characters/{characterId}/previous/{attemptId}', name: 'app_previous')]
+    #[Route('/previous/{characterId}/{attemptId}', name: 'app_previous')]
     public function previousIndex(string $characterId, string $attemptId): Response
     {
         $character = $this->getCharacter($characterId);
@@ -177,7 +177,8 @@ class CharactersController extends AbstractController
                 'active_player' => $character->getPlayer()->getId(),
                 'character' => $character,
                 'attempt' => $attempt,
-                'milestones' => $previousMilestones
+                'milestones' => $previousMilestones,
+                'current_attempt' => $attempt
             ]
         );
     }
