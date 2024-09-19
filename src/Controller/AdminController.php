@@ -87,7 +87,7 @@ class AdminController extends AbstractController
         $time = $now - $lastUsed;
         if ($time > $this->maxIdleTime) {
             $session->invalidate(1);
-            $this->redirectToRoute('_logout_main');
+            $this->redirectToRoute('app_login');
         }
     }
 
