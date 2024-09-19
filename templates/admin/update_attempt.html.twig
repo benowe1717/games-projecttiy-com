@@ -51,6 +51,14 @@
                 {% endif %}
             </div>
             <div class="mb-3">
+                <label class="form-label" for="{{ update_attempt_form.completed.vars.id }}">{{ update_attempt_form.completed.vars.label }}</label>
+                <select class="form-select" id="{{ update_attempt_form.completed.vars.id }}" name="{{ update_attempt_form.completed.vars.full_name }}">
+                {% for choice in update_attempt_form.completed.vars.choices %}
+                <option value="{{ choice.value }}">{{ choice.label }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <div class="mb-3">
                 <button class="btn btn-secondary d-block w-10" id="{{ update_attempt_form.submit.vars.id }}" name="{{ update_attempt_form.submit.vars.full_name }}">{{ update_attempt_form.submit.vars.label }}</button>
             </div>
             <input id="{{ update_attempt_form.children._token.vars.id }}" name="{{ update_attempt_form.children._token.vars.full_name }}" value="{{ update_attempt_form.children._token.vars.value }}" type="hidden">

@@ -53,6 +53,9 @@ class Character
     #[ORM\OneToOne(inversedBy: 'characterId', cascade: ['persist', 'remove'])]
     private ?Job $secondaryJob = null;
 
+    #[ORM\Column]
+    private ?bool $completed = null;
+
     public function __construct()
     {
         $this->attempts = new ArrayCollection();
@@ -180,6 +183,18 @@ class Character
     public function setSecondaryJob(?Job $secondaryJob): static
     {
         $this->secondaryJob = $secondaryJob;
+
+        return $this;
+    }
+
+    public function isCompleted(): ?bool
+    {
+        return $this->completed;
+    }
+
+    public function setCompleted(bool $completed): static
+    {
+        $this->completed = $completed;
 
         return $this;
     }
