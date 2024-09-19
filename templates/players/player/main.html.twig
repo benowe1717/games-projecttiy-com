@@ -18,7 +18,7 @@
                             <rect width="100%" height="100%" fill="#7d8184"></rect>
                         </svg>
                     {% else %}
-                        <img src="{{ asset('images/characters/'~character.profilePicture~'') }}" width="100%" height="100%" />
+                        <img src="{{ character_photo_dir }}/{{ character.profilePicture }}" width="100%" height="100%" />
                     {% endif %}
                     <div class="card-body">
                         <h4 class="card-title">{{ character.name }}</h4>
