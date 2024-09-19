@@ -2,6 +2,16 @@
 
 ## Viewing
 
+Navigate to [Games](games.projecttiy.com) to view the website!
+
+Use the Players button to see who is participating in the game or use the About button to see what the Challenge is all abot and what the rules are.
+
+## Screenshots
+
+![Home Screen](https://raw.githubusercontent.com/benowe1717/games-projecttiy-com/develop/docs/home.png)
+![About Screen](https://raw.githubusercontent.com/benowe1717/games-projecttiy-com/develop/docs/about.png)
+![Contact Screen](https://raw.githubusercontent.com/benowe1717/games-projecttiy-com/develop/docs/contact.png)
+
 ## Contributing to Hardcore New World Tracker
 
 To contribute to Hardcore New World Tracker, follow these steps:
@@ -18,7 +28,7 @@ Alternatively see the GitHub documentation on [creating a pull request](https://
 
 Thanks to the following people who have contributed to this project:
 
-- @Benjamin Owen
+- [Benjamin Owen](https://github.com/benowe1717)
 
 ## Contact
 
