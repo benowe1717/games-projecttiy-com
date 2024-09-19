@@ -18,6 +18,7 @@ security:
             pattern: ^/admin
             provider: app_user_provider
             context: role_player
+            entry_point: security.authenticator.form_login.main
         main:
             lazy: true
             provider: app_user_provider

@@ -28,11 +28,11 @@ use App\Entity\User;
 use App\Form\NewAttemptType;
 use App\Form\NewCharacterType;
 use App\Form\UpdateAttemptType;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Symfony Controller for /admin Route
@@ -48,6 +48,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class AdminController extends AbstractController
 {
     private EntityManagerInterface $entityManager;
+    private RequestStack $requestStack;
+
+    private int $maxIdleTime;
 
     public string $title = 'Admin';
     public array $players = array();
@@ -57,11 +60,35 @@ class AdminController extends AbstractController
      * HomeController constructor
      *
      * @param EntityManagerInterface $entityManager Entity Manager
+     * @param RequestStack           $requestStack  The Request Stack
      **/
-    public function __construct(EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        RequestStack $requestStack
+    ) {
         $this->entityManager = $entityManager;
+        $this->requestStack = $requestStack;
+        $this->maxIdleTime = $_ENV['MAX_IDLE_TIME'];
         $this->getPlayers();
+    }
+
+    /**
+     * Check if session is expired and expire it if it is
+     *
+     * @return void
+     **/
+    private function expireSession(): void
+    {
+        $session = $this->requestStack->getSession();
+        $session->start();
+
+        $now = time();
+        $lastUsed = $session->getMetadataBag()->getLastUsed();
+        $time = $now - $lastUsed;
+        if ($time > $this->maxIdleTime) {
+            $session->invalidate(1);
+            $this->redirectToRoute('app_login');
+        }
     }
 
     /**
@@ -189,6 +216,10 @@ class AdminController extends AbstractController
         Request $request,
         #[Autowire('%character_photo_dir%')] string $photoDir
     ): Response {
+        $this->expireSession();
+
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         // Data for all tabs and forms
         $currentUser = $this->getUser();
         $myPlayer = $this->getPlayer($currentUser);
