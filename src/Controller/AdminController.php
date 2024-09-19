@@ -218,6 +218,8 @@ class AdminController extends AbstractController
     ): Response {
         $this->expireSession();
 
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         // Data for all tabs and forms
         $currentUser = $this->getUser();
         $myPlayer = $this->getPlayer($currentUser);
