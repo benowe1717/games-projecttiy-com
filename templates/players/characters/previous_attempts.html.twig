@@ -1,0 +1,26 @@
+{% block main %}
+
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-10">
+            <h1 id="previous-attempts">
+                <a class="header-link" href="#previous-attempts" title="Permalink to this header">Previous Attempts</a>
+            </h1>
+            {% if character.attempts|length > 1 %}
+            <ul class="list-group">
+                {% for attempt in character.attempts %}
+                {% if attempt.isCurrent == 0 %}
+                <li class="list-group-item">
+                    <a class="list-group-link" href="/previous/{{ character.id }}/{{ attempt.id }}">Previous Attempt #{{ attempt.attemptNumber }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="mb-4">No previous attempts!</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

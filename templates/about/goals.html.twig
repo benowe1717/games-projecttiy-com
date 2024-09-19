@@ -1,0 +1,46 @@
+{% block main %}
+
+<div class="container mt-3 mb-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-10">
+            <h1 id="goals">
+                <a class="header-link" href="#goals">Goals</a>
+            </h1>
+            <div class="row justify-content-center splitter mb-4">
+                <div class="col-lg-8 col-xl-10 mb-4">
+                    <h2 id="major-goals">
+                        <a class="header-link" href="#major-goals">Major Goals</a>
+                    </h2>
+                    <ul class="list-group">
+                    {% for goal in major_goals %}
+                        <li class="list-group-item">
+                            <span>- {{ goal.name }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row justify-content-center splitter mb-4">
+                <div class="col-lg-8 col-xl-10 mb-4">
+                    <h2 id="minor-goals">
+                        <a class="header-link" href="#minor-goals">Minor Goals</a>
+                    </h2>
+                    <ul class="list-group">
+                    {% for goal in minor_goals %}
+                        <li class="list-group-item">
+                            <span>- {{ goal.name }}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="row justify-content-center mb-4">
+                <div class="col-lg-8 col-xl-10 mb-4">
+                    <p class="mb-4">Once all Major Goals are accomplished, the Hardcore character is considered <b>complete</b>. Any Minor Goals or additional personal goals you have set for your character can be completed. Or you can simply retire the character and start again!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

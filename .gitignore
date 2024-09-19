@@ -25,3 +25,11 @@ composer.lock
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+.phpactor.json
+.php-cs-fixer.cache
+
+###> local files ###
+/.docker-env
+/.docker-run
+/data
+###< local files ###

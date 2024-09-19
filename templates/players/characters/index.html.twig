@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Games - {{ title }}
+{% endblock %}
+
+{% block body %}
+    {% block navbar %}
+        {{ include('navbar.html.twig') }}
+    {% endblock %}
+
+    {% block main %}
+        {{ include('players/characters/title.html.twig') }}
+        {{ include('players/characters/bio.html.twig') }}
+        {{ include('players/characters/roles_and_jobs.html.twig') }}
+        {{ include('players/characters/milestones_achieved.html.twig') }}
+        {{ include('players/characters/character_details.html.twig') }}
+        {{ include('players/characters/previous_attempts.html.twig') }}
+    {% endblock %}
+
+    {% block footer %}
+        {{ include('footer.html.twig') }}
+    {% endblock %}
+{% endblock %}

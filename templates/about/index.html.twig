@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Games - {{ title }}
+{% endblock %}
+
+{% block body %}
+    {% block navbar %}
+        {{ include('navbar.html.twig') }}
+    {% endblock %}
+
+    {% block main %}
+        {{ include('about/goals.html.twig') }}
+        {{ include('about/rules.html.twig') }}
+        {{ include('about/stats.html.twig') }}
+    {% endblock %}
+
+    {% block footer %}
+        {{ include('footer.html.twig') }}
+    {% endblock %}
+{% endblock %}

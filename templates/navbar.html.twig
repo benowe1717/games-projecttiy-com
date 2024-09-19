@@ -1,0 +1,49 @@
+{% block navbar %}
+{% set route = app.request.get('_route') %}
+
+<nav class="navbar navbar-expand-md py-3">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="/">
+            <span>Project TIY Games</span>
+        </a>
+        <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navcol-1">
+            <span class="visually-hidden">Toggle navigation</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg>
+        </button>
+        <div id="navcol-1" class="collapse navbar-collapse">
+            <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'app_home' ? 'active' }}" href="/">Home</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="dropdown-toggle nav-link {{ route == 'app_players' ? 'active' }} {{ route == 'app_player' ? 'active' }} {{ route == 'app_previous' ? 'active' }} {{ route == 'app_character' ? 'active' }}" aria-expanded="false" data-bs-toggle="dropdown" href="/players">Players</a>
+                    <div class="dropdown-menu">
+                        {% for player in players %}
+                        <a class="dropdown-item {{ player.id == active_player ? 'active' }}" href="/players/{{ player.id }}">{{ player.name }}</a>
+                        {% endfor %}
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'app_about' ? 'active' }}" href="/about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'app_contact' ? 'active' }}" href="/contact">Contact</a>
+                </li>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <li class="nav-item">
+                    <a class="nav-link {{ route == 'app_admin' ? 'active' }}" href="/admin">Admin</a>
+                </li>
+                {% endif %}
+            </ul>
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            <a class="btn btn-secondary" type="button" href="/logout">Sign Out</a>
+            {% else %}
+            <a class="btn btn-secondary" type="button" href="/login">Sign In</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+{% endblock %}

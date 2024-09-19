@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% block navbar %}
+        {{ include('navbar.html.twig') }}
+    {% endblock %}
+
+    {% block main %}
+        {{ include('players/characters/previous/title.html.twig') }}
+        {{ include('players/characters/previous/bio.html.twig') }}
+        {{ include('players/characters/previous/roles_and_jobs.html.twig') }}
+        {{ include('players/characters/previous/milestones_achieved.html.twig') }}
+        {{ include('players/characters/previous/cause_of_death.html.twig') }}
+        {{ include('players/characters/previous/character_details.html.twig') }}
+        {{ include('players/characters/previous/previous_attempts.html.twig') }}
+    {% endblock %}
+
+    {% block footer %}
+        {{ include('footer.html.twig') }}
+    {% endblock %}
+{% endblock %}
