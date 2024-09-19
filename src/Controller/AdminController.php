@@ -168,14 +168,14 @@ class AdminController extends AbstractController
      * / app_admin Route
      *
      * @param Request  $request  Form data
-     * @param Autowire $photoDir Directory for picture uploads
+     * @param Autowire $photoDir Directory for character picture uploads
      *
      * @return Response
      **/
     #[Route('/admin', name: 'app_admin')]
     public function index(
         Request $request,
-        #[Autowire('%photo_dir%')] string $photoDir
+        #[Autowire('%character_photo_dir%')] string $photoDir
     ): Response {
         // Data for all tabs and forms
         $currentUser = $this->getUser();
