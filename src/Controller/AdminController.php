@@ -117,11 +117,18 @@ class AdminController extends AbstractController
      *
      * @param Player $myPlayer The current logged in user's player
      *
-     * @return Collection
+     * @return array
      **/
-    public function getCharacters(Player $myPlayer): Collection
+    public function getCharacters(Player $myPlayer): array
     {
-        return $myPlayer->getCharacters();
+        // return $myPlayer->getCharacters();
+        $myCharacters = array();
+        foreach ($myPlayer->getCharacters() as $character) {
+            if (!$character->isCompleted()) {
+                $myCharacters[] = $character;
+            }
+        }
+        return $myCharacters;
     }
 
     /**
@@ -135,10 +142,12 @@ class AdminController extends AbstractController
     {
         $myCharacters = $myPlayer->getCharacters();
         foreach ($myCharacters as $character) {
-            $myAttempts = $character->getAttempts();
-            foreach ($myAttempts as $attempt) {
-                if ($attempt->isCurrent()) {
-                    return $attempt;
+            if (!$character->isCompleted()) {
+                $myAttempts = $character->getAttempts();
+                foreach ($myAttempts as $attempt) {
+                    if ($attempt->isCurrent()) {
+                        return $attempt;
+                    }
                 }
             }
         }
@@ -158,10 +167,13 @@ class AdminController extends AbstractController
             ->getRepository(Attempt::class);
         $myCharacters = $myPlayer->getCharacters();
         foreach ($myCharacters as $character) {
-            $attempt = $attemptRepository
-                ->getMostRecentAttemptbyCharacter($character);
-            return $attempt;
+            if (!$character->isCompleted()) {
+                $attempt = $attemptRepository
+                    ->getMostRecentAttemptbyCharacter($character);
+                return $attempt;
+            }
         }
+        return new Attempt();
     }
 
     /**
@@ -213,9 +225,21 @@ class AdminController extends AbstractController
         if ($updateAttemptForm->isSubmitted() && $updateAttemptForm->isValid()) {
             $attempt = $updateAttemptForm->getData();
 
+            // Set challenge completed status
+            $myCharacter = $attempt->getCharacterId();
+            $myCharacter->setCompleted($updateAttemptForm['completed']->getData());
+            $this->entityManager->persist($myCharacter);
+            $this->entityManager->flush();
+
             // If you died, the attempt is no longer current
             if (!empty($attempt->getCauseOfDeath())) {
                 $attempt->setCurrent(false);
+            }
+
+            // If the challenge was completed, the attempt is no longer current
+            if ($myCharacter->isCompleted()) {
+                $attempt->setCurrent(false);
+                $attempt->setCauseOfDeath = 'None';
             }
 
             // Write update to database

@@ -66,12 +66,14 @@ class CharacterFixtures extends Fixture implements DependentFixtureInterface
                 $role = $data[4];
                 $primaryJob = $data[5];
                 $secondaryJob = $data[6];
-                $reference = $data[7];
+                $completed = $data[7];
+                $reference = $data[8];
 
                 $character = new Character();
                 $character->setName($name);
                 $character->setBio($bio);
                 $character->setProfilePicture($profilePicture);
+                $character->setCompleted($completed);
 
                 $ref = "player.{$player}";
                 $playerRef = $this->getReference($ref);

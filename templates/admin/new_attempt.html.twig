@@ -1,5 +1,6 @@
 <div class="row justify-content-start mt-3 mb-3">
     <div class="col-lg-12 col-xl-12">
+        {% if new_attempt_form.characterId.vars.choices|length > 0 %}
         <form method="{{ new_attempt_form.vars.method }}" id="{{ new_attempt_form.vars.id }}" name="{{ new_attempt_form.vars.full_name }}">
             <div class="mb-3">
                 <label class="form-label" for="{{ new_attempt_form.characterId.vars.id }}">{{ new_attempt_form.characterId.vars.label }}</label>
@@ -25,5 +26,10 @@
             </div>
             <input id="{{ new_attempt_form.children._token.vars.id }}" name="{{ new_attempt_form.children._token.vars.full_name }}" value="{{ new_attempt_form.children._token.vars.value }}" type="hidden">
         </form>
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            <p class="m-1">You have no active characters! Please start a new character!</p>
+        </div>
+        {% endif %}
     </div>
 </div>
