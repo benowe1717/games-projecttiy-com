@@ -27,6 +27,7 @@
                 {% endfor %}
                 </select>
             </div>
+            {% if new_character_form.primaryJob.vars.choices|length > 0 %}
             <div class="mb-3">
                 <label class="form-label" for="{{ new_character_form.primaryJob.vars.id }}">{{ new_character_form.primaryJob.vars.label }}</label>
                 <select class="form-select" id="{{ new_character_form.primaryJob.vars.id }}" name="{{ new_character_form.primaryJob.vars.full_name }}">
@@ -35,6 +36,8 @@
                 {% endfor %}
                 </select>
             </div>
+            {% endif %}
+            {% if new_character_form.secondaryJob.vars.choices|length > 0 %}
             <div class="mb-3">
                 <label class="form-label" for="{{ new_character_form.secondaryJob.vars.id }}">{{ new_character_form.secondaryJob.vars.label }}</label>
                 <select class="form-select" id="{{ new_character_form.secondaryJob.vars.id }}" name="{{ new_character_form.secondaryJob.vars.full_name }}">
@@ -43,6 +46,7 @@
                 {% endfor %}
                 </select>
             </div>
+            {% endif %}
             <div class="mb-3">
                 <label class="form-label" for="{{ new_character_form.fileAttachment.vars.id }}">{{ new_character_form.fileAttachment.vars.label }}</label>
                 <input class="form-control" id="{{ new_character_form.fileAttachment.vars.id }}" name="{{ new_character_form.fileAttachment.vars.full_name }}" type="file" accept="image/png, image/jpeg">

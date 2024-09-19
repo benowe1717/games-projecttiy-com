@@ -52,7 +52,6 @@ class AdminController extends AbstractController
     public string $title = 'Admin';
     public array $players = array();
     public int $activePlayer = -1;
-    public array $milestones = array();
 
     /**
      * HomeController constructor
@@ -86,7 +85,7 @@ class AdminController extends AbstractController
     {
         $jobRepository = $this->entityManager
             ->getRepository(Job::class);
-        return $jobRepository->getPrimaryJobs();
+        return $jobRepository->getAvailablePrimaryJobs();
     }
 
     /**
@@ -98,7 +97,7 @@ class AdminController extends AbstractController
     {
         $jobRepository = $this->entityManager
             ->getRepository(Job::class);
-        return $jobRepository->getSecondaryJobs();
+        return $jobRepository->getAvailableSecondaryJobs();
     }
 
     /**
@@ -331,7 +330,6 @@ class AdminController extends AbstractController
                 'title' => $this->title,
                 'players' => $this->players,
                 'active_player' => $this->activePlayer,
-                'milestones' => $this->milestones,
                 'update_attempt_form' => $updateAttemptForm,
                 'completed_milestones' => $completedMilestones,
                 'has_attempts' => $hasAttempts,

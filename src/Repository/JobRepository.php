@@ -76,6 +76,50 @@ class JobRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Get all unassigned Primary Jobs
+     *
+     * @return Job[] Returns an array of Job objects
+     **/
+    public function getAvailablePrimaryJobs(): array
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT j
+            FROM App\Entity\Job j
+            LEFT JOIN App\Entity\Character c
+            WITH j.id = c.primaryJob
+            WHERE j.category = :val
+            AND c.id IS NULL
+            ORDER BY j.id'
+        )->setParameter('val', 'primary');
+
+        return $query->getResult();
+    }
+
+    /**
+     * Get all unassigned Secondary Jobs
+     *
+     * @return Job[] Returns an array of Job objects
+     **/
+    public function getAvailableSecondaryJobs(): array
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT j
+            FROM App\Entity\Job j
+            LEFT JOIN App\Entity\Character c
+            WITH j.id = c.secondaryJob
+            WHERE j.category = :val
+            AND c.id IS NULL
+            ORDER BY j.id'
+        )->setParameter('val', 'secondary');
+
+        return $query->getResult();
+    }
+
     //    /**
     //     * @return Job[] Returns an array of Job objects
     //     */
