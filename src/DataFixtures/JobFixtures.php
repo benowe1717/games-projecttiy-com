@@ -59,11 +59,13 @@ class JobFixtures extends Fixture
 
                 $name = $data[0];
                 $description = $data[1];
-                $reference = $data[2];
+                $category = $data[2];
+                $reference = $data[3];
 
                 $job = new Job();
                 $job->setName($name);
                 $job->setDescription($description);
+                $job->setCategory($category);
 
                 $manager->persist($job);
                 $manager->flush();

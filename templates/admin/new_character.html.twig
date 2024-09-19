@@ -1,46 +1,65 @@
 <div class="row justify-content-start mt-3 mb-3">
-    <form method="post">
-        <div class="mb-3">
-            <label for="name-1" class="form-label">Name</label>
-            <input id="name-1" class="form-control" type="text" name="name" placeholder="Character Name">
-        </div>
-        <div class="mb-3">
-            <label for="bio-1" class="form-label">Bio</label>
-            <textarea id="bio-1" class="form-control" rows="6" name="bio" placeholder="is a..."></textarea>
-        </div>
-        <div class="mb-3">
-            <label for="role-1" class="form-label">Role</label>
-            <select class="form-select">
-                <option selected>Select...</option>
-                {% for role in roles %}
-                    <option value="{{ role.id }}">{{ role.name }}</option>
+    <div class="col-lg-12 col-xl-12">
+        <form method="{{ new_character_form.vars.method }}" id="{{ new_character_form.vars.id }}" name="{{ new_character_form.vars.full_name }}" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label" for="{{ new_character_form.name.vars.id }}">{{ new_character_form.name.vars.label }}</label>
+                <input class="form-control" id="{{ new_character_form.name.vars.id }}" name="{{ new_character_form.name.vars.full_name }}" value="{{ new_character_form.name.vars.value }}" type="text" minlength="3" maxlength="255" placeholder="NWNoob24">
+                {% if new_character_form.name.vars.errors|length > 0 %}
+                <div class="alert alert-danger mt-1" role="alert">
+                    {{ new_character_form.name.vars.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="{{ new_character_form.bio.vars.id }}">{{ new_character_form.bio.vars.label }}</label>
+                <textarea class="form-control" rows="6" id="{{ new_character_form.bio.vars.id }}" name="{{ new_character_form.bio.vars.full_name }}" placeholder="is a..."></textarea>
+                {% if new_character_form.bio.vars.errors|length > 0 %}
+                <div class="alert alert-danger mt-1" role="alert">
+                    {{ new_character_form.bio.vars.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="{{ new_character_form.role.vars.id }}">{{ new_character_form.role.vars.label }}</label>
+                <select class="form-select" id="{{ new_character_form.role.vars.id }}" name="{{ new_character_form.role.vars.full_name }}">
+                {% for choice in new_character_form.role.vars.choices %}
+                <option value="{{ choice.value }}">{{ choice.label }}</option>
                 {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="primaryJob-1" class="form-label">Primary Job</label>
-            <select class="form-select">
-                <option selected>Select...</option>
-                {% for job in primary_jobs %}
-                    <option value="{{ job.id }}">{{ job.name }}</option>
+                </select>
+            </div>
+            {% if new_character_form.primaryJob.vars.choices|length > 0 %}
+            <div class="mb-3">
+                <label class="form-label" for="{{ new_character_form.primaryJob.vars.id }}">{{ new_character_form.primaryJob.vars.label }}</label>
+                <select class="form-select" id="{{ new_character_form.primaryJob.vars.id }}" name="{{ new_character_form.primaryJob.vars.full_name }}">
+                {% for choice in new_character_form.primaryJob.vars.choices %}
+                <option value="{{ choice.value }}">{{ choice.label }}</option>
                 {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="secondaryJob-1" class="form-label">Secondary Job</label>
-            <select class="form-select">
-                <option selected>Select...</option>
-                {% for job in secondary_jobs %}
-                    <option value="{{ job.id }}">{{ job.name }}</option>
+                </select>
+            </div>
+            {% endif %}
+            {% if new_character_form.secondaryJob.vars.choices|length > 0 %}
+            <div class="mb-3">
+                <label class="form-label" for="{{ new_character_form.secondaryJob.vars.id }}">{{ new_character_form.secondaryJob.vars.label }}</label>
+                <select class="form-select" id="{{ new_character_form.secondaryJob.vars.id }}" name="{{ new_character_form.secondaryJob.vars.full_name }}">
+                {% for choice in new_character_form.secondaryJob.vars.choices %}
+                <option value="{{ choice.value }}">{{ choice.label }}</option>
                 {% endfor %}
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="profilePicture-1" class="form-label">Profile Picture</label>
-            <input class="form-control" type="file" id="profilePicture-1">
-        </div>
-        <div>
-            <button class="btn btn-secondary d-block w-10" type="submit">Start</button>
-        </div>
-    </form>
+                </select>
+            </div>
+            {% endif %}
+            <div class="mb-3">
+                <label class="form-label" for="{{ new_character_form.fileAttachment.vars.id }}">{{ new_character_form.fileAttachment.vars.label }}</label>
+                <input class="form-control" id="{{ new_character_form.fileAttachment.vars.id }}" name="{{ new_character_form.fileAttachment.vars.full_name }}" type="file" accept="image/png, image/jpeg">
+                {% if new_character_form.fileAttachment.vars.errors|length > 0 %}
+                <div class="alert alert-danger mt-1" role="alert">
+                    {{ new_character_form.fileAttachment.vars.errors }}
+                </div>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-secondary d-block w-10" id="{{ new_character_form.submit.vars.id }}" name="{{ new_character_form.submit.vars.full_name }}">{{ new_character_form.submit.vars.label }}</button>
+            </div>
+            <input id="{{ new_character_form.children._token.vars.id }}" name="{{ new_character_form.children._token.vars.full_name }}" value="{{ new_character_form.children._token.vars.value }}" type="hidden">
+        </form>
+    </div>
 </div>
